@@ -29,6 +29,15 @@ export const friendsData: FriendItem[] = [
 		siteurl: "https://docs.mizuki.mysqil.com",
 		tags: ["Docs"],
 	},
+    {
+        id: 3,
+        title: "TEST",
+        imgurl:
+            "",
+        desc: "Test",
+        siteurl: "www.test.com",
+        tags: ["Test"],
+    },
 ];
 
 // 获取所有友情链接数据
