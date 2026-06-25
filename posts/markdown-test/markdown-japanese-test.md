@@ -1,7 +1,7 @@
 ---
 title: 日本語のマークダウンテスト
 published: 2026-06-26 02:44:00
-tag: [Markdown, テスト]
+tags: [Markdown, テスト]
 category: テスト
 draft: false
 ---

@@ -1,7 +1,7 @@
 ---
 title: English Markdown Test
 published: 2026-06-26 02:44:00
-tag: [Markdown, Test]
+tags: [Markdown, Test]
 category: Test
 draft: false
 ---
