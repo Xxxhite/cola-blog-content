@@ -35,7 +35,7 @@ export const friendsData: FriendItem[] = [
         imgurl:
             "",
         desc: "Test",
-        siteurl: "https://www.test.com",
+        siteurl: "",
         tags: ["Test"],
     },
 ];

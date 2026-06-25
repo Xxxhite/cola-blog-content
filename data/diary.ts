@@ -25,7 +25,7 @@ const diaryData: DiaryItem[] = [
         content:
             "Test 2",
         date: "2026-06-24T22:00:00Z",
-        images: [],
+        location: "HZ",
     },
     {
         id: 3,

@@ -14,13 +14,5 @@ export type DeviceCategory = Record<string, Device[]> & {
 };
 
 export const devicesData: DeviceCategory = {
-	TEST: [
-		{
-			name: "test",
-			image: "/images/device/oneplus13t.webp",
-			specs: "114514",
-			description: "test",
-			link: "https://www.oneplus.com/cn/13t",
-		},
-	],
+
 };
