@@ -1,7 +1,9 @@
 ---
-title: "日本語のマークダウンテスト"
-date: "2026-06-26"
-description: "短い日本語のマークダウンテスト記事。"
+title: 日本語のマークダウンテスト
+published: 2026-06-26 02:44:00
+tag: [Markdown, テスト]
+category: テスト
+draft: false
 ---
 
 # 日本語のマークダウンテスト

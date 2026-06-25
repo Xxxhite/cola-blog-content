@@ -1,7 +1,9 @@
 ---
-title: "English Markdown Test"
-date: "2026-06-26"
-description: "A short English markdown test article."
+title: English Markdown Test
+published: 2026-06-26 02:44:00
+tag: [Markdown, Test]
+category: Test
+draft: false
 ---
 
 # English Markdown Test
