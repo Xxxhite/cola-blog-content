@@ -1,6 +1,6 @@
 ---
 title: Mock Post 3
-published: 2026-06-25
+published: 2026-06-25 10:02:26
 tags: [Test]
 category: Mock
 draft: false

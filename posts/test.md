@@ -1,6 +1,6 @@
 ---
 title: Test Article
-published: 2026-06-24
+published: 2026-06-24 10:13:49
 tags: [Test]
 category: Examples
 draft: true

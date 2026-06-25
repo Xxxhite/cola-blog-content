@@ -1,6 +1,6 @@
 ---
 title: Summer Trip to Kyoto
-published: 2026-06-25
+published: 2026-06-25 10:10:10
 tags: [Japan, Summer]
 category: Travel
 draft: false

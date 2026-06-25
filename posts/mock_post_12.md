@@ -1,6 +1,6 @@
 ---
 title: Perfect Chocolate Cake Recipe
-published: 2026-06-25
+published: 2026-06-25 10:11:23
 tags: [Recipes, Dessert]
 category: Food
 draft: false

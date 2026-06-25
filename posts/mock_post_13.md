@@ -1,6 +1,6 @@
 ---
 title: Review: The New Album
-published: 2026-06-25
+published: 2026-06-25 10:12:36
 tags: [Review, Rock]
 category: Music
 draft: false
