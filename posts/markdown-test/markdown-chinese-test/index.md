@@ -1,5 +1,6 @@
 ---
 title: 中文 Markdown 语法全面测试
+image: "./cover.jpg"
 published: 2026-06-25 21:03:00
 pinned: true
 description: 这是一篇用于测试中文 Markdown 渲染效果的文章，涵盖了文本样式、列表、引用块、表格、代码块、链接和图片等常见 Markdown 元素。
@@ -68,7 +69,7 @@ if __name__ == "__main__":
 这是一个链接：[点击访问 Google](https://www.google.com)
 
 下面是一张占位图片：
-![占位图片](https://via.placeholder.com/300x150)
+![占位图片](1.jpg)
 
 ---
 
