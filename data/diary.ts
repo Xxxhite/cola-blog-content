@@ -16,31 +16,9 @@ const diaryData: DiaryItem[] = [
 	{
 		id: 1,
 		content:
-			"The falling speed of cherry blossoms is five centimeters per second!",
-		date: "2025-01-15T10:30:00Z",
-		images: ["/images/diary/sakura.jpg", "/images/diary/1.webp"],
+			"随便写点东西放在这里，调这个配置实在是太累人了，啥时候能搞完我说。",
+		date: "2026-06-26 05:12:10",
 	},
-    {
-        id: 2,
-        content:
-            "Test 2",
-        date: "2026-06-24T22:00:00Z",
-        location: "HZ",
-    },
-    {
-        id: 3,
-        content:
-            "Test 114514",
-        date: "2026-06-25T17:36:00+08:00",
-        images: [],
-    },
-    {
-        id: 4,
-        content:
-            "Test time test",
-        date: "2026-06-25 17:37:00",
-        images: [],
-    },
 ];
 
 // 获取日记列表（按时间倒序）
