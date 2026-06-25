@@ -5,15 +5,14 @@ export const timelineData: TimelineItem[] = [
 		id: "test",
 		title: "test timeline",
 		description:
-			"test",
-		type: "test",
+			"test desc",
+		type: "test type",
 		startDate: "2026-06-25",
-		location: "Hangzhou",
-		organization: "ZSTU",
-		skills: ["test1", "test2"],
+		location: "?",
+		organization: "test organization",
+		skills: ["工作经历"],
 		achievements: [
-			"tttttttttttttt",
-            "tttttttttttttt"
+			"1974年第一次在东南亚打自由搏击"
 		],
 		icon: "material-symbols:school",
 		color: "#059669",
