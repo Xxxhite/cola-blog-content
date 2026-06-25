@@ -3,7 +3,7 @@ title: Mock Post 7
 published: 2026-06-25 10:06:18
 tags: [Test]
 category: Mock
-draft: false
+draft: true
 ---
 
 # Mock Post 7
