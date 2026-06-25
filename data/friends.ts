@@ -43,9 +43,7 @@ export const friendsData: FriendItem[] = [
         title: "香香的记事终端",
         imgurl:
             "https://pages.rosmontis.love/images/fav512.webp",
-        desc: "我想她需要一个记录器。我会给她造一台终端，方便输入的那种。这样她就能时常翻阅记录，去重新挖掘出她想要的那些场景和词句，让她的情感重新回归她脑中的事实，规整起来。像是把台词还给电影。\n" +
-            "\n" +
-            "—— 模糊不清的个人记录，被夹在了资料夹里",
+        desc: "我想她需要一个记录器。我会给她造一台终端，方便输入的那种。这样她就能时常翻阅记录，去重新挖掘出她想要的那些场景和词句，让她的情感重新回归她脑中的事实，规整起来。像是把台词还给电影。",
         siteurl: "http://pages.rosmontis.love",
         tags: ["Friends"],
     },
