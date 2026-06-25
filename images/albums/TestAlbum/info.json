@@ -1,0 +1,10 @@
+{
+	"title": "TEST album",
+	"hidden": false,
+	"description": "desc",
+	"date": "2026-06-25",
+	"location": "Tokyo, Japan",
+	"tags": ["Test", "Example"],
+	"layout": "masonry",
+	"columns": 3
+}
