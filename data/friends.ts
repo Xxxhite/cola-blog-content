@@ -6,7 +6,7 @@ export interface FriendItem {
 	title: string;
 	imgurl: string;
 	desc: string;
-	siteurl: string;
+	siteurl: string;    // 必须是以协议开头的网址
 	tags: string[];
 }
 
@@ -35,7 +35,7 @@ export const friendsData: FriendItem[] = [
         imgurl:
             "",
         desc: "Test",
-        siteurl: "",
+        siteurl: "https://www.test.com",
         tags: ["Test"],
     },
 ];
