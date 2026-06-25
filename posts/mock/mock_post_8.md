@@ -8,7 +8,9 @@ draft: false
 
 # Mock Post 8
 
-This is a test post for pagination testing.<br>
-*This is a test post for pagination testing.*<br>
+This is a test post for pagination testing.
+
+*This is a test post for pagination testing.*
+
 **This is a test post for pagination testing.**
 
