@@ -6,11 +6,11 @@ export const timelineData: TimelineItem[] = [
 		title: "test timeline",
 		description:
 			"test desc",
-		type: "test type",
+		type: "工作经历",
 		startDate: "2026-06-25",
 		location: "?",
 		organization: "test organization",
-		skills: ["工作经历"],
+		skills: ["test skill"],
 		achievements: [
 			"1974年第一次在东南亚打自由搏击"
 		],
