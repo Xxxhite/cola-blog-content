@@ -4,7 +4,7 @@ description: 这里详细介绍了本站的友链申请方式
 published: 2026-06-26 07:02:27
 tags: [友链]
 category: 须知
-image: './cover.png'
+image: './cover.webp'
 pinned: true
 draft: false
 ---
