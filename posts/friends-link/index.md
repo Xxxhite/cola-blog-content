@@ -5,6 +5,7 @@ published: 2026-06-26 07:02:27
 tags: [友链]
 category: 须知
 image: './cover.png'
+pinned: true
 draft: false
 ---
 
