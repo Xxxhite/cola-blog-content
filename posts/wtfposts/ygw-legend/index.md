@@ -1,13 +1,12 @@
 ---
 title: 一股味传奇
 published: 2026-06-27 05:27:00
-description: 
 tags: [小说, 爽文, 纯爱]
 category: ？
 draft: false
 pinned: false
 encrypted: true
-password: 114514
+password: "114514"
 ---
 
 ## 第一章：同衾
