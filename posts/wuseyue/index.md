@@ -1,7 +1,6 @@
 ---
 title: 乌色月
 published: 2026-06-27 03:29:53
-description:
 image: "./cover.webp"
 tags: [ 小说, V ]
 category: ？
