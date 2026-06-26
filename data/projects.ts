@@ -20,7 +20,7 @@ export interface Project {
 }
 
 export const projectsData: Project[] = [
-
+    // 暂不使用这个功能，无需添加
 ];
 
 // Get project statistics
@@ -57,11 +57,13 @@ export const getFeaturedProjects = () => {
 
 // Get all tech stacks
 export const getAllTechStack = () => {
-	const techSet = new Set<string>();
+	// @ts-ignore
+    const techSet = new Set<string>();
 	projectsData.forEach((project) => {
 		project.techStack.forEach((tech) => {
 			techSet.add(tech);
 		});
 	});
-	return Array.from(techSet).sort();
+	// @ts-ignore
+    return Array.from(techSet).sort();
 };

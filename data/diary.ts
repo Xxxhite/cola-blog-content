@@ -36,7 +36,8 @@ export const getDiaryList = (limit?: number) => {
 
 // 获取所有标签
 export const getAllTags = () => {
-	const tags = new Set<string>();
+	// @ts-ignore
+    const tags = new Set<string>();
 	for (const item of diaryData) {
 		if (item.tags) {
 			for (const tag of item.tags) {
@@ -44,5 +45,6 @@ export const getAllTags = () => {
 			}
 		}
 	}
-	return Array.from(tags).sort();
+	// @ts-ignore
+    return Array.from(tags).sort();
 };

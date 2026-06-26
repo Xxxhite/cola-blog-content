@@ -17,7 +17,7 @@ export interface AnimeItem {
 }
 
 const localAnimeList: AnimeItem[] = [
-
+    // 使用Bangumi API获取，无需添加
 ];
 
 export default localAnimeList;

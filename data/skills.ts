@@ -18,5 +18,5 @@ export interface Skill {
 }
 
 export const skillsData: Skill[] = [
-
+    // 暂不使用这个功能，无需添加
 ];

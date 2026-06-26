@@ -14,5 +14,5 @@ export type DeviceCategory = Record<string, Device[]> & {
 };
 
 export const devicesData: DeviceCategory = {
-
+    // 暂不使用这个功能，无需添加
 };
