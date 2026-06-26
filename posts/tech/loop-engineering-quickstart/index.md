@@ -1,5 +1,5 @@
 ---
-title: 小白教程：一文带你搞明白Loop Engineering并快速上手
+title: 小白教程：一文带你搞明白 Loop Engineering 并快速上手
 published: 2026-06-27 05:03:10
 description: 本文详细讲解了 Loop Engineering 的核心概念、适用场景以及如何搭建一个最小循环，帮助新手快速上手 AI 自动化。
 image: './cover.webp'
@@ -10,6 +10,10 @@ pinned: false
 author: 金尘马
 sourceLink: https://x.com/jinchenma_ai/status/2070293677206094086
 ---
+
+:::warning[阅读提示]
+本文配图包含高亮/纯白底色内容，暗光环境下阅读请注意调整屏幕亮度，避免刺眼。
+:::
 
 最近好多人开始讨论 Loop Engineering。
 
