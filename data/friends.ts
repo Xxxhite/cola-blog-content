@@ -19,7 +19,16 @@ export const friendsData: FriendItem[] = [
             "https://pages.rosmontis.love/images/fav512.webp",
         desc: "我想她需要一个记录器。我会给她造一台终端，方便输入的那种。这样她就能时常翻阅记录，去重新挖掘出她想要的那些场景和词句，让她的情感重新回归她脑中的事实，规整起来。像是把台词还给电影。",
         siteurl: "http://pages.rosmontis.love",
-        tags: ["Friends"],
+        tags: ["Friends", "Blog"],
+    },
+    {
+        id: 2,
+        title: "滴墨",
+        imgurl:
+            "https://dimo.qwq6.xyz/dimo.svg",
+        desc: "像雾，像雨，又像风。这里写代码、写电影、写一些半夜想通的小事 —— 慢慢沉淀，等你来读。",
+        siteurl: "http://dimo.qwq6.xyz",
+        tags: ["Friends", "Blog"],
     },
 ];
 
