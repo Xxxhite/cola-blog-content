@@ -55,7 +55,7 @@ export const timelineData: TimelineItem[] = [
             url: "https://blog.sopak.space",
             type: "website"
         }],
-        icon: "tdesign:cola-filled",
+        icon: "icon-park-outline:cola",
         color: "#F5222D"
     }
 ];
