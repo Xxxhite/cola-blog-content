@@ -50,7 +50,7 @@ const diaryData: DiaryItem[] = [
 
 // 获取日记列表（按时间倒序）
 // @ts-ignore
-import { parseDateWithSiteTimezone } from "../utils/date-utils";
+import { parseDateWithSiteTimezone } from "@utils/date-utils";
 
 export const getDiaryList = (limit?: number) => {
     const sortedData = [...diaryData].sort(
