@@ -39,10 +39,10 @@ plot(x, y,
 ## 双坐标轴作图
 ```r
 # 第一张图
-plot(stock$year, stock$SP, type = "l", col = "blue")
+plot(stock$$year, stock$$SP, type = "l", col = "blue")
 # 覆盖并画第二张图
 par(new = TRUE)
-plot(stock$year, stock$SQ, type = "l", col = "red", axes = FALSE)
+plot(stock$$year, stock$$SQ, type = "l", col = "red", axes = FALSE)
 axis(side = 4)   # 添加右侧坐标轴
 ```
 

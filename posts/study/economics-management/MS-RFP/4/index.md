@@ -1,7 +1,7 @@
 ---
 title: ggplot2 与高级数据可视化
 published: 2026-06-29 03:23:00
-description: 除了自带的 `plot()`，R 语言的绘图天花板是 `ggplot2` 和其生态系统。本文讲解如何绘制条形图、直方图、箱线图、气泡图以及雷达图等专业图表。
+description: 除了自带的 plot()，R 语言的绘图天花板是 ggplot2 和其生态系统。本文讲解如何绘制条形图、直方图、箱线图、气泡图以及雷达图等专业图表。
 tags: [ggplot2, 数据可视化, 高级图表]
 category: 管理统计与R实训
 draft: false
@@ -25,7 +25,7 @@ library(ggplot2)
 library(reshape2)
 
 # 面积图/折线图示例
-df <- melt(example3_7, id.vars = "year", variable.name = "Type", value.name = "Expenditure")
+df <- melt(expenditure_data, id.vars = "year", variable.name = "Type", value.name = "Expenditure")
 
 ggplot(df, aes(x = year, y = Expenditure, color = Type, group = Type)) +
   geom_line() + 
@@ -38,7 +38,7 @@ ggplot(df, aes(x = year, y = Expenditure, color = Type, group = Type)) +
 借助第三方包可以轻松绘制雷达图，用于多维度数据对比。
 ```r
 library(ggiraphExtra)
-ggRadar(data = example3_6, aes(group = Regional), alpha = 0, size = 2)
+ggRadar(data = regional_data, aes(group = Regional), alpha = 0, size = 2)
 ```
 
 ## 进阶补充：ggplot2的底层哲学与扩展机制

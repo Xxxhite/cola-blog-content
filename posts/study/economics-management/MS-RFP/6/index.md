@@ -25,10 +25,10 @@ qt(0.975, df = 20)                    # 自由度20的双尾分位数
 library(BSDA)
 
 # 总体标准差已知，求95%置信区间
-z.test(x, mu = 0, sigma.x = 5, conf.level = 0.95)$conf.int
+z.test(x, mu = 0, sigma.x = 5, conf.level = 0.95)$$conf.int
 
 # 总体标准差未知，用样本标准差代替
-z.test(x, mu = 0, sigma.x = sd(x), conf.level = 0.95)$conf.int
+z.test(x, mu = 0, sigma.x = sd(x), conf.level = 0.95)$$conf.int
 ```
 
 ## 进阶补充：极大似然估计 (MLE) 与经验分布函数
@@ -40,4 +40,4 @@ z.test(x, mu = 0, sigma.x = sd(x), conf.level = 0.95)$conf.int
     }
     optim(c(0, 1), neg_log_lik, x = sample_data)
     ```
-*   **经验累积分布函数 (ECDF)**：在不预设任何参数分布假设时，可以通过 `ecdf()` 函数生成阶跃函数，利用 Kolmogorov-Smirnov 检验（`ks.test`）来量化样本分布与理论分布之间的最大距离 ($D_n$)。
+*   **经验累积分布函数 (ECDF)**：在不预设任何参数分布假设时，可以通过 `ecdf()` 函数生成阶跃函数，利用 Kolmogorov-Smirnov 检验（`ks.test`）来量化样本分布与理论分布之间的最大距离 ($$D_n$$)。
