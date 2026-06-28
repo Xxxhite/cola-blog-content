@@ -41,7 +41,7 @@ const diaryData: DiaryItem[] = [
     {
         id: 4,
         content:
-            "距离上次起床已经38个小时了有感觉吗。",
+            "距离上次起床已经38个小时了……",
         date: "2026-06-28 00:00:00",
         mood: "🥱",
         tags: ["呟き"]
