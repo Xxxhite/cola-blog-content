@@ -3,7 +3,7 @@ title: "网络信息资源与信息组织"
 published: 2026-06-28 16:42:00
 description: "为了更好地利用海量的网络信息资源，必须对其进行有效的组织与管理。"
 tags: [网络资源, 信息组织, Web检索]
-category: Study
+category: 信息检索与Web数据挖掘
 draft: false
 ---
 

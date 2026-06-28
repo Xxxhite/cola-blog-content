@@ -3,7 +3,7 @@ title: "检索步骤与检索策略"
 published: 2026-06-28 16:37:00
 description: "在完成了信息检索的基础理论学习后，我们需要进一步探讨具体的检索步骤和馆藏资源的实际应用。"
 tags: [检索策略, 信息检索, 技能]
-category: Study
+category: 信息检索与Web数据挖掘
 draft: false
 ---
 

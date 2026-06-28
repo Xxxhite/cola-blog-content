@@ -3,7 +3,7 @@ title: "国外标准数据库"
 published: 2026-06-28 16:39:00
 description: "标准文献是了解世界各国工业发展情况的重要科技情报源。常以`Standard`（标准）、`Specification`（规范）、`Rules`（规则）等命名。"
 tags: [标准数据库, 信息检索, 规范检索]
-category: Study
+category: 信息检索与Web数据挖掘
 draft: false
 ---
 

@@ -3,7 +3,7 @@ title: "信息检索与Web数据挖掘 - 课程大纲与总结"
 published: 2026-06-28 16:35:00
 description: "信息检索与Web数据挖掘课程的完整大纲与核心知识点总结，涵盖信息资源、检索策略、各类数据库及网络爬虫等内容。"
 tags: [信息检索, 课程大纲, Web挖掘, 知识总结]
-category: Study
+category: 信息检索与Web数据挖掘
 draft: false
 ---
 

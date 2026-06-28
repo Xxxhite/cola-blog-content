@@ -3,7 +3,7 @@ title: "网络爬虫"
 published: 2026-06-28 16:44:00
 description: "网络爬虫是数据获取的重要手段。本节从基本原理、实战应用到法律道德问题，全面梳理网络爬虫的知识体系。"
 tags: [网络爬虫, Web挖掘, 数据获取]
-category: Study
+category: 信息检索与Web数据挖掘
 draft: false
 ---
 

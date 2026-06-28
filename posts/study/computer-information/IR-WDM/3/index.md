@@ -3,7 +3,7 @@ title: "外文数据库与专利检索"
 published: 2026-06-28 16:38:00
 description: "在掌握了基础的文献检索后，我们还可以利用专门的数据库获取学位论文和专利信息。"
 tags: [外文数据库, 专利检索, 信息检索]
-category: Study
+category: 信息检索与Web数据挖掘
 draft: false
 ---
 

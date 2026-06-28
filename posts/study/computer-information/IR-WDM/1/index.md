@@ -3,7 +3,7 @@ title: "绪论"
 published: 2026-06-28 16:36:00
 description: "本章主要介绍信息检索的基础知识，帮助我们理清信息环境的演变规律、提升信息素质，并系统了解各类信息资源的构成与特征。"
 tags: [信息检索, 基础理论, 知识获取]
-category: Study
+category: 信息检索与Web数据挖掘
 draft: false
 ---
 
