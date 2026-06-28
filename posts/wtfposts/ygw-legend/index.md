@@ -2,7 +2,7 @@
 title: 一股味传奇
 published: 2026-06-27 05:27:00
 tags: [小说, 爽文, 纯爱]
-category: ？
+category: 这啥
 draft: false
 pinned: false
 encrypted: true
