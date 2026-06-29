@@ -16,10 +16,10 @@ export const friendsData: FriendItem[] = [
         id: 1,
         title: "三理Mit3uri",
         imgurl:
-            "https://i0.hdslb.com/bfs/face/3dd1f948bef06a933084e7231fa0708bea6410aa.jpg@128w_128h_1c_1s.webp",
+            "/images/friends/mit3uri.webp",
         desc: "个人的一个小私心，是一个很努力很努力的紫色小猪。「 一起于梦境穿梭🔮 」",
         siteurl: "https://space.bilibili.com/2030198123",
-        tags: [""],
+        tags: ["🟣🐷"],
     },
     {
         id: 2,
