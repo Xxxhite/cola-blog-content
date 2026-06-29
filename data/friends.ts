@@ -5,7 +5,7 @@ export interface FriendItem {
 	id: number;
 	title: string;
 	imgurl: string;
-	desc: string;
+	desc: string;       // 支持html标签，如用 <br> 换行
 	siteurl: string;    // 必须是以协议开头的网址
 	tags: string[];
 }
@@ -17,7 +17,7 @@ export const friendsData: FriendItem[] = [
         title: "三理Mit3uri",
         imgurl:
             "/images/friends/mit3uri.webp",
-        desc: "个人的一个小私心，是一个很努力很努力的紫色小猪。「 一起于梦境穿梭🔮 」",
+        desc: "个人的一个小私心，是一个很努力很努力的紫色小猪。<br>「 一起于梦境穿梭🔮 」",
         siteurl: "https://space.bilibili.com/2030198123",
         tags: ["🟣🐷"],
     },
