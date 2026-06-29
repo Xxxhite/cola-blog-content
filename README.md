@@ -8,7 +8,7 @@
 
 ---
 
-## 目录结构 | Directory Structure
+## 目录结构
 
 ```text
 cola-blog-content/
