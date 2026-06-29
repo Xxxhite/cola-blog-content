@@ -45,6 +45,15 @@ const diaryData: DiaryItem[] = [
         date: "2026-06-28 00:00:00",
         mood: "🥱",
         tags: ["呟き"]
+    },
+    {
+        id: 5,
+        content:
+            "期末考试你在无差别的攻击所有人！",
+        date: "2026-06-30 00:10:44",
+        images: ["/images/diary/5.jpg"],
+        mood: "😡",
+        tags: ["呟き"]
     }
 ];
 
