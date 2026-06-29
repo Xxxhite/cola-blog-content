@@ -51,7 +51,7 @@ const diaryData: DiaryItem[] = [
         content:
             "期末考试你在无差别的攻击所有人！",
         date: "2026-06-30 00:10:44",
-        images: ["/images/diary/5.jpg"],
+        images: ["/images/diary/5.png"],
         mood: "😡",
         tags: ["呟き"]
     }
