@@ -40,9 +40,9 @@ cola-blog-content/
 
 本项目参考并使用了 **Mizuki** 博客模板构建。关于本内容仓库如何与代码库关联，以及更详细的配置与使用方法，请直接查阅 Mizuki 原项目的官方使用说明：
 
-👉 [https://github.com/matsuzaka-yuki/Mizuki](https://github.com/matsuzaka-yuki/Mizuki)
+👉 [https://github.com/LyraVoid/Mizuki](https://github.com/LyraVoid/Mizuki)
 
 ## 致谢
 
-感谢开源博客模板 [Mizuki](https://github.com/matsuzaka-yuki/Mizuki) 提供的支持与基础。
+感谢开源博客模板 [Mizuki](https://github.com/LyraVoid/Mizuki) 提供的支持与基础。
 
