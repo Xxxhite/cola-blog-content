@@ -14,6 +14,15 @@ export interface FriendItem {
 export const friendsData: FriendItem[] = [
     {
         id: 1,
+        title: "三理Mit3uri",
+        imgurl:
+            "https://i0.hdslb.com/bfs/face/3dd1f948bef06a933084e7231fa0708bea6410aa.jpg@128w_128h_1c_1s.webp",
+        desc: "个人的一个小私心，是一个很努力很努力的紫色小猪。「 一起于梦境穿梭🔮 」",
+        siteurl: "https://space.bilibili.com/2030198123",
+        tags: [""],
+    },
+    {
+        id: 2,
         title: "香香的记事终端",
         imgurl:
             "https://pages.rosmontis.love/images/fav512.webp",
@@ -22,7 +31,7 @@ export const friendsData: FriendItem[] = [
         tags: ["Friends", "Blog"],
     },
     {
-        id: 2,
+        id: 3,
         title: "滴墨",
         imgurl:
             "https://dimo.qwq6.xyz/dimo.svg",
