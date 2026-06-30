@@ -1,7 +1,7 @@
 ---
 title: "第 7 章 MySQL 程序设计"
 published: 2026-06-30 18:06:00
-tags: [数据库, MySQL, SQL, 数据库原理]
+tags: [存储过程, 自定义函数, 触发器, 游标控制流]
 category: "数据库原理与应用"
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "第 8 章 MySQL 高级应用技术"
 published: 2026-06-30 18:07:00
-tags: [数据库, MySQL, SQL, 数据库原理]
+tags: [JSON数据, 层次树状模型, 路径枚举, 深度分页优化]
 category: "数据库原理与应用"
 ---
 
