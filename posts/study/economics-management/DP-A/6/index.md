@@ -70,18 +70,11 @@ WITH RECURSIVE tmp (id, name, path) AS (
   JOIN tmp AS b ON b.id = a.ReportsTo
 )
 SELECT * FROM tmp ORDER BY id;
-```\n
-
-:::warning[教材纠错：CTE 语句建表语法错误]
-原书中给出的公用表表达式建表实例代码中写有：
-```sql
-CREATE TABLE bbb WITH tmp AS (
-  SELECT a.*, b.companyname FROM orders a JOIN Customers b USING(CustomerID) ...
-) SELECT * FROM tmp;
 ```
+### 6.3.2 使用 CTE 创建表
 
-**纠错解析**：在 MySQL 8.0 中，`WITH` 子句是 `SELECT` 语句的一部分，不能夹在 `CREATE TABLE` 和其子查询的中间。此段代码在 MySQL 中运行时会抛出严重的 `Syntax Error`（语法错误）。
-**正确代码**：应该将 `WITH` 部分作为 `AS` 之后的子查询主导，如下：
+在 MySQL 中，如果需要将 CTE 查询的结果直接保存到新表中，需要将 `WITH` 部分作为 `AS` 之后的子查询主体：
+
 ```sql title="correct_cte_create_table.sql"
 CREATE TABLE bbb AS 
 WITH tmp AS (
@@ -93,4 +86,3 @@ WITH tmp AS (
 ) 
 SELECT * FROM tmp ORDER BY RAND();
 ```
-:::

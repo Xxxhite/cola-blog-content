@@ -44,11 +44,4 @@ CREATE INDEX idx_product_price ON Products (UnitPrice);
 
 -- 删除索引
 DROP INDEX idx_product_price ON Products;
-```\n
-
-:::warning[教材纠错：DECIMAL 数据类型定义拷贝错误]
-原书中在介绍常用数据类型时，将 `Decimal(M, D)` 的特征描述写成了：“*D 是精度，如果 D<=24 则为默认的 FLOAT，如果 D>24 则会自动被转换为 DOUBLE 型。*”
-
-**纠错解析**：这是直接从 `Float(M, D)` 描述中复制粘贴遗留的排版硬伤。在 MySQL 中，`DECIMAL` 属于高精度的**定点数类型**，绝对不会在存储时退化或隐式转换为浮点数。其正确定义应当为：
-> `Decimal(M, D)`：固定精度和小数位的数字数据。M 是最大有效位数（精度，取值范围 $1 \sim 65$），D 是小数点右侧的位数（标度，取值范围 $0 \sim 30$）。常用在对数值精度要求极高（不允许浮点误差）的金融、财务报表等场景中。
-:::
+```

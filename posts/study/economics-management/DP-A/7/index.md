@@ -133,48 +133,4 @@ BEGIN
   CLOSE cur_prod;
 END $$
 DELIMITER ;
-```\n
-
-## 7.5 教材纠错：存储过程与触发器中的逻辑与语法硬伤
-
-:::warning[教材纠错 1：中位数计算逻辑丢失分母]
-在原书实例 7-6 的中位数计算中，偶数个数时的中位数求法为：
-```sql
-IF (MOD($n,2)=0) THEN
-  SELECT sum(Unitprice) into $m FROM ...
 ```
-**纠错解析**：当总商品数为偶数时，中位数定义应为中间两位单价的**平均值**（即 `SUM(Unitprice) / 2`）。原书代码直接求和，导致偶数情况下的中位数结果扩大了整整一倍。应更正为 `SELECT SUM(Unitprice) / 2 INTO $m`。
-:::
-
-:::warning[教材纠错 2：存储过程名称拼写不匹配]
-原书在同一实例段落中创建存储过程为 `sp7`（`CREATE PROCEDURE sp7...`），但随后的运行调用指令却错写成调用 `sp1`（`CALL sp1(...)`），会导致运行报错。应将调用更正为 `CALL sp7(...)`。
-:::
-
-:::warning[教材纠错 3：变量名未声明引用错误]
-在原书 `sp7` 的返回判定代码中写有：
-```sql
-IF ($Amount is null) then set $amt=0;
-```
-**纠错解析**：在过程参数定义中，对外输出变量明明声明为 `$amt`，此处却校验 `$Amount` 是否为空。由于 `$Amount` 属于未声明的未定义变量，此代码在 MySQL 中将编译失败。应更正为 `IF ($amt IS NULL) THEN SET $amt = 0; END IF;`。
-:::
-
-:::warning[教材纠错 4：触发器 Repeat 循环体中直接引用子查询（语法死症）]
-在原书触发器自动生成工号的 `REPEAT` 循环中写有：
-```sql
-REPEAT
-  ...
-UNTIL not exists(SELECT * FROM myEmployees where EmployeeID=$EmployeeID) 
-END REPEAT;
-```
-**纠错解析**：在 MySQL 过程体控制中，`UNTIL` 后只能计算标量布尔表达式，**严禁直接挂载 `NOT EXISTS` 等子查询**，否则直接报语法分析错误。
-**正确更正方案**：需额外声明一个标志变量，先查询再做判断：
-```sql title="correct_trigger_loop.sql"
-DECLARE $exists_flag INT DEFAULT 1;
-REPEAT
-  SELECT CONCAT($s1, RIGHT(1000 + RAND() * 999, 3), $s2) INTO $EmployeeID;
-  -- 先查询结果并写入布尔标志变量
-  SELECT COUNT(*) INTO $exists_flag FROM myEmployees WHERE EmployeeID = $EmployeeID;
-UNTIL $exists_flag = 0 
-END REPEAT;
-```
-:::
