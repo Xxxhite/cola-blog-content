@@ -4,6 +4,7 @@ published: 2026-06-30 18:01:00
 tags: [关系代数, 完整性约束, 查询优化, 等价变换]
 category: "数据库原理与应用"
 ---
+
 :::warning[阅读提示]
 本文配图包含高亮/纯白底色内容，暗光环境下阅读请注意调整屏幕亮度，避免刺眼。
 :::
@@ -48,7 +49,7 @@ category: "数据库原理与应用"
 *   **交 (Intersection, $\cap$)**：$R \cap S = \{ t \mid t \in R \land t \in S \}$，可以表示为 $R - (R - S)$
 *   **广义笛卡尔积 (Cartesian Product, $\times$)**：$R \times S$，结果的属性数为 $R$ 与 $S$ 属性数之和，元组数为两关系元组数之积。
 
-![传统集合运算 🤖 **Note:** 该图片由 AI 协助生成。 w-60% ](./2-3.webp "传统集合运算")
+![传统集合运算 w-60%](./2-3.webp "传统集合运算（🤖 Note: 该图片由 AI 协助生成）")
 
 ### 2.3.2 专门的关系运算
 
@@ -71,4 +72,4 @@ category: "数据库原理与应用"
     *   连接与笛卡尔积的交换律与结合律：$R \bowtie S \equiv S \bowtie R$；$(R \bowtie S) \bowtie T \equiv R \bowtie (S \bowtie T)$。
     *   选择的分配律：$\sigma_F(R \cup S) \equiv \sigma_F(R) \cup \sigma_F(S)$；$\sigma_F(R \bowtie S) \equiv \sigma_F(R) \bowtie S$（若条件 $F$ 只涉及关系 $R$ 的属性）。
 
-![等价变换查询优化树对比 🤖 **Note:** 该图片由 AI 生成。 w-60%](./2-4.webp "等价变换查询优化树对比")
+![等价变换查询优化树对比 w-60%](./2-4.webp "等价变换查询优化树对比（🤖 Note: 该图片由 AI 生成）")
