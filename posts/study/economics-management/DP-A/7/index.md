@@ -16,9 +16,7 @@ category: "数据库原理与应用"
 2.  **用户变量**：以 `@` 开头，在当前会话（Session）中一直有效，无需声明即可直接赋值使用（如 `SET @num = 1;`）。
 3.  **局部变量**：必须在存储过程或函数体的 `BEGIN...END` 块中使用 `DECLARE` 声明，且声明必须位于块的最开始处。
 
-## 7.2 存储过程 (Stored Procedure) 与自定义函数 (UDF)
-
-*   **存储过程**：
+## 7.2 存储过程（Stored Procedure) 与自定义函数 (UDF）*   **存储过程**：
     *   通过 `CREATE PROCEDURE` 创建，使用 `CALL` 语句调用。
     *   支持 `IN`（输入）、`OUT`（输出）、`INOUT`（输入输出）三种参数模式。
     *   可以包含 DDL、DML 操作，允许返回多个结果集。
@@ -67,9 +65,7 @@ END $$
 DELIMITER ;
 ```
 
-## 7.3 触发器 (Trigger)
-
-触发器是在表发生 `INSERT`、`UPDATE` 或 `DELETE` 操作时自动触发执行的一组 SQL 语句。
+## 7.3 触发器（Trigger）触发器是在表发生 `INSERT`、`UPDATE` 或 `DELETE` 操作时自动触发执行的一组 SQL 语句。
 *   **行级触发器**：使用 `FOR EACH ROW` 说明，每一次受影响的行都会执行一次触发器。
 *   **内置临时行**：
     *   `INSERT` 触发器：拥有 `NEW` 临时行，代表即将插入的新数据。
@@ -102,9 +98,7 @@ END $$
 DELIMITER ;
 ```
 
-## 7.4 游标 (Cursor)
-
-游标用于逐行遍历 SQL 查询结果集。MySQL 的游标是 **只读、单向（不可逆向移动）且不敏感** 的。
+## 7.4 游标（Cursor）游标用于逐行遍历 SQL 查询结果集。MySQL 的游标是 **只读、单向（不可逆向移动）且不敏感** 的。
 使用步骤：`DECLARE（定义游标及 NOT FOUND 处理器）` $\to$ `OPEN（打开游标）` $\to$ `FETCH（提取数据到变量）` $\to$ `CLOSE（关闭游标）`。
 
 ```sql title="cursor_loop.sql"
@@ -164,7 +158,7 @@ IF ($Amount is null) then set $amt=0;
 **纠错解析**：在过程参数定义中，对外输出变量明明声明为 `$amt`，此处却校验 `$Amount` 是否为空。由于 `$Amount` 属于未声明的未定义变量，此代码在 MySQL 中将编译失败。应更正为 `IF ($amt IS NULL) THEN SET $amt = 0; END IF;`。
 :::
 
-:::warning[教材纠错 4：触发器 Repeat 循环体中直接引用子查询 (语法死症)]
+:::warning[教材纠错 4：触发器 Repeat 循环体中直接引用子查询（语法死症）]
 在原书触发器自动生成工号的 `REPEAT` 循环中写有：
 ```sql
 REPEAT
@@ -172,7 +166,7 @@ REPEAT
 UNTIL not exists(SELECT * FROM myEmployees where EmployeeID=$EmployeeID) 
 END REPEAT;
 ```
-**纠错解析**：在 MySQL 过程体控制中，`UNTIL` 后只能计算标量布尔表达式，**严禁直接挂载 NOT EXISTS 等子查询**，否则直接报语法分析错误。
+**纠错解析**：在 MySQL 过程体控制中，`UNTIL` 后只能计算标量布尔表达式，**严禁直接挂载 `NOT EXISTS` 等子查询**，否则直接报语法分析错误。
 **正确更正方案**：需额外声明一个标志变量，先查询再做判断：
 ```sql title="correct_trigger_loop.sql"
 DECLARE $exists_flag INT DEFAULT 1;
