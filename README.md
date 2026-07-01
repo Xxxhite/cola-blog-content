@@ -25,6 +25,7 @@ cola-blog-content/
 │   │   ├── computer-science/       # 计算机科学相关
 │   │   │   └── IR-WDM/             # 信息检索与Web数据挖掘
 │   │   └── economics-management/   # 经济管理相关
+│   │       ├── DP-A/               # 数据库原理与应用
 │   │       ├── MS-RFP/             # 管理统计与R实训
 │   │       └── MO/                 # 管理运筹学
 │   ├── tech/                       # 技术分享与开发日志
