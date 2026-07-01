@@ -54,4 +54,4 @@ CREATE TABLE Orders (
   OrderDate DATE NOT NULL,
   CONSTRAINT fk_orders_customers FOREIGN KEY (CustomerID) REFERENCES Customers (CustomerID)
 );
-```\n
+```

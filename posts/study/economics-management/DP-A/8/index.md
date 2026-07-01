@@ -76,4 +76,4 @@ CREATE TABLE CategoryTree (
 *   **索引优化建议**：
     *   对 `WHERE` 子句和 `ORDER BY` 子句中频繁出现的列创建索引。
     *   创建联合索引时，必须遵循 **最左匹配原则**（如建立 `(A, B, C)` 索引，只有查询条件包含 `A` 时索引才生效）。
-    *   避免在索引列上使用函数或进行表达式计算（如 `WHERE YEAR(OrderDate) = 2018` 会使索引失效，应改为 `WHERE OrderDate BETWEEN '2018-01-01' AND '2018-12-31'`）。\n
+    *   避免在索引列上使用函数或进行表达式计算（如 `WHERE YEAR(OrderDate) = 2018` 会使索引失效，应改为 `WHERE OrderDate BETWEEN '2018-01-01' AND '2018-12-31'`）。
