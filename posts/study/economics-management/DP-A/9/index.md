@@ -114,3 +114,6 @@ category: "数据库原理与应用"
 - **三级协议**：侧重于解决特定的并发不一致问题（如脏读、不可重复读），它定义的是不同锁的持有生命周期。
 - **2PL 协议**：规定所有事务的加锁操作必须在解锁操作之前进行（加锁阶段和解锁阶段）。它是保证并发事务 **可串行化 (Serializability)** 执行（即并发执行效果等同于某种串行执行效果）的充分条件。遵循 2PL 的事务并不一定是三级协议，三级协议也不一定完全遵循 2PL。
 :::
+
+## 参考视频：数据库系统概论 陈红 老师主讲 第11章 并发控制
+<iframe width="100%" height="468" src="//player.bilibili.com/player.html?bvid=BV1Y4411G78z&p=1&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" &autoplay=0> </iframe>
