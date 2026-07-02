@@ -342,31 +342,19 @@ $$\text{Result}_3 = S_{\text{class}} \bowtie S_{\text{eligible}}$$
 :::
 
 ```sql title="create_table_riders.sql"
-CREATE TABLE IF NOT EXISTS `riders` (
-    `RiderID`     VARCHAR(20)  NOT NULL COMMENT '员工编码',
-    `RiderName`   VARCHAR(50)  NOT NULL COMMENT '姓名',
-    `IDCard`      CHAR(18)     NOT NULL COMMENT '身份证号',
-    `Phone`       VARCHAR(20)  NOT NULL COMMENT '手机号码',
-    `LiveAddress` VARCHAR(255) DEFAULT NULL COMMENT '居住地址',
-    `StationID`   VARCHAR(20)  DEFAULT NULL COMMENT '当前所属美团站点编码（简化外键关联）',
-    
-    -- 计算列 1：根据身份证第 7-14 位，转换为出生日期 (date 型)
-    `BirthDate`   DATE GENERATED ALWAYS AS (
-        STR_TO_DATE(SUBSTRING(`IDCard`, 7, 8), '%Y%m%d')
-    ) STORED COMMENT '出生日期（由身份证号自动生成）',
-    
-    -- 计算列 2：根据身份证第 17 位奇偶，转换为性别
-    `Gender`      CHAR(1) GENERATED ALWAYS AS (
-        IF(CAST(SUBSTRING(`IDCard`, 17, 1) AS UNSIGNED) % 2 = 1, '男', '女')
-    ) STORED COMMENT '性别（由身份证号自动生成）',
-
-    -- 约束条件设置
-    PRIMARY KEY (`RiderID`),
-    UNIQUE KEY `uk_idcard` (`IDCard`),
-    CONSTRAINT `fk_rider_station` FOREIGN KEY (`StationID`) REFERENCES `stations` (`StationID`)
-        ON DELETE SET NULL 
-        ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+drop table if exists Rider;
+create table Rider (
+    RiderID        int primary key,
+    RiderName      varchar(20) not null,
+    IdentityNumber char(18)    not null unique,
+    Phone          char(11)    not null,
+    Address        text        not null,
+    SiteID         int         not null,
+    Birthdate      date as (date(concat(substring(IdentityNumber, 7, 4), '-', substring(IdentityNumber, 11, 2), '-',
+                                        substring(IdentityNumber, 13, 2)))),
+    Gender         enum ('男','女') as (if(substring(IdentityNumber, 17, 1) % 2 = 1, '男', '女')),
+    foreign key (SiteID) references Station (SiteID)
+);
 ```
 
 :::tip[MySQL 计算列语法与实现细节]
