@@ -268,93 +268,7 @@ $$\text{Result}_3 = S_{\text{class}} \bowtie S_{\text{eligible}}$$
 
 我们使用 Mermaid 构建全局 E-R 图，清晰展示实体及其属性、联系类型以及联系属性：
 
-```mermaid
-erDiagram
-    %% 实体定义与属性
-    STATION ||--o{ RIDER_BELONGING : "拥有"
-    RIDER ||--o{ RIDER_BELONGING : "记录归属"
-    STATION ||--o{ RESTAURANT_AGREEMENT : "管理"
-    RESTAURANT ||--o{ RESTAURANT_AGREEMENT : "签署"
-    RESTAURANT ||--o{ DISH : "提供"
-    CUSTOMER ||--o{ ORDER : "下单"
-    RIDER ||--o{ ORDER : "配送"
-    ORDER ||--o{ ORDER_DETAIL : "包含"
-    DISH ||--o{ ORDER_DETAIL : "订购"
-
-    STATION {
-        string StationID PK "站点编码"
-        string StationName "站点名称"
-        string City "所在城市"
-        string Address "详细地址"
-        string Leader "负责人"
-    }
-
-    RIDER {
-        string RiderID PK "员工编码"
-        string RiderName "姓名"
-        string IDCard "身份证号"
-        string Phone "手机号码"
-        string LiveAddress "居住地址"
-    }
-
-    RIDER_BELONGING {
-        string RiderID PK, FK "员工编码"
-        string StationID PK, FK "站点编码"
-        date StartDate PK "开始时间"
-        date EndDate "结束时间"
-    }
-
-    RESTAURANT {
-        string RestID PK "餐店编码"
-        string RestName "餐店名称"
-        string Address "详细地址"
-        string Contact "联系人"
-        string Phone "联系电话"
-        string LicenseNum "营业执照编号"
-    }
-
-    RESTAURANT_AGREEMENT {
-        string RestID PK, FK "餐店编码"
-        string StationID FK "站点编码"
-        int Year PK "协议年度"
-    }
-
-    DISH {
-        string DishID PK "菜品编码"
-        string DishName "菜品名称"
-        string MainIngredient "主料"
-        string Taste "口味"
-        decimal Price "报价"
-        string RestID FK "所属餐店编码"
-    }
-
-    CUSTOMER {
-        string CustID PK "顾客账号"
-        string CustName "姓名"
-        string Phone "联系电话"
-        string DefaultAddress "默认送货地址"
-    }
-
-    ORDER {
-        string OrderID PK "订单编号"
-        string CustID FK "顾客账号"
-        string RiderID FK "配送骑手编码"
-        datetime OrderTime "下单时间"
-        string DeliveryTimeRange "选择到货时间区间"
-        string ShippingAddress "本次送货地址"
-        decimal DeliveryFee "配送费用"
-        datetime FinishedTime "配送完成时间"
-        int RiderRating "骑手服务评价"
-        int QualityRating "餐店菜品品质评价"
-    }
-
-    ORDER_DETAIL {
-        string OrderID PK, FK "订单编号"
-        string DishID PK, FK "菜品编码"
-        int Quantity "购买数量"
-        decimal ActualUnitPrice "实际购买单价"
-    }
-```
+![美团外卖订餐平台 E-R 关系图](./er_diagram.png)
 
 :::note[设计思路解析]
 1. **骑手与站点（多对多变体历史联系）**：因为“一个骑手在同一时间内只能属于一个美团站点，但在不同时间中可以加入不同美团站点”，所以骑手与站点并不是单纯的 1:N 关系，而是随时间变化的多对多历史记录。因此我们引入了联系实体 `RIDER_BELONGING`（骑手归属历史），其联合主键包含 `(RiderID, StartDate)`，用以记录骑手在不同时段所属的站点。
@@ -463,14 +377,24 @@ CREATE TABLE IF NOT EXISTS `riders` (
 ### 1. 将下列关系代数转换为一条 SQL 语句
 
 #### (1) 原关系代数表达式
-$$R = \Pi_{OrderID} \left( \sigma_{Orderdate \ge '2018-01-01' \land Orderdate \le '2018-06-30'}(Orders) \bowtie OrderItems \bowtie \sigma_{Productname = \text{'青岛啤酒'}}(Products) \cap \sigma_{Orderdate \ge '2018-01-01' \land Orderdate \le '2018-06-30'}(Orders) \bowtie OrderItems \bowtie \sigma_{Productname = \text{'百威啤酒'}}(Products) \right)$$
+$$
+\begin{aligned}
+R = \Pi_{OrderID} \Big( & \sigma_{Orderdate \ge '2018-01-01' \land Orderdate \le '2018-06-30'}(Orders) \bowtie OrderItems \bowtie \sigma_{Productname = \text{'青岛啤酒'}}(Products) \\
+& \cap \sigma_{Orderdate \ge '2018-01-01' \land Orderdate \le '2018-06-30'}(Orders) \bowtie OrderItems \bowtie \sigma_{Productname = \text{'百威啤酒'}}(Products) \Big)
+\end{aligned}
+$$
 $$\Pi_{CustomerID, Companyname}(Customers) - \Pi_{CustomerID, Companyname}( R \bowtie Customers )$$
 
 #### (2) 标准化与大写改写后的关系代数表达式
 我们将原表达式进行标准化（添加合理的关联表连接，并按照要求将所有投影操作符整理为大写的 $\Pi$）：
 
 - **第一步 (求同时购买了“青岛啤酒”和“百威啤酒”的订单集 $R$)**：
-  $$R = \Pi_{OrderID} \left( \sigma_{Orderdate \ge '2018-01-01' \land Orderdate \le '2018-06-30'}(Orders) \bowtie OrderItems \bowtie \sigma_{Productname = \text{'青岛啤酒'}}(Products) \right) \cap \Pi_{OrderID} \left( \sigma_{Orderdate \ge '2018-01-01' \land Orderdate \le '2018-06-30'}(Orders) \bowtie OrderItems \bowtie \sigma_{Productname = \text{'百威啤酒'}}(Products) \right)$$
+  $$
+  \begin{aligned}
+  R = & \Pi_{OrderID} \left( \sigma_{Orderdate \ge '2018-01-01' \land Orderdate \le '2018-06-30'}(Orders) \bowtie OrderItems \bowtie \sigma_{Productname = \text{'青岛啤酒'}}(Products) \right) \\
+  & \cap \Pi_{OrderID} \left( \sigma_{Orderdate \ge '2018-01-01' \land Orderdate \le '2018-06-30'}(Orders) \bowtie OrderItems \bowtie \sigma_{Productname = \text{'百威啤酒'}}(Products) \right)
+  \end{aligned}
+  $$
 - **第二步 (与客户及订单表连接，求差集获得未购买的客户)**：
   $$\Pi_{CustomerID, Companyname}(Customers) - \Pi_{CustomerID, Companyname}( R \bowtie Orders \bowtie Customers )$$
 

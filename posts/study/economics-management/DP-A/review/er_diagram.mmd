@@ -1,0 +1,100 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#000000',
+    'primaryTextColor': '#ffffff',
+    'entityBkg': '#ffffff',
+    'entityBorder': '#000000',
+    'lineColor': '#000000',
+    'attributeBackgroundColor': '#ffffff',
+    'attributeTextColor': '#000000',
+    'edgeLabelBackground': '#ffffff',
+    'labelTextColor': '#000000',
+    'fontSize': '18px'
+  }
+}}%%
+erDiagram
+    %% 实体定义与属性
+    STATION ||--o{ RIDER_BELONGING : "拥有"
+    RIDER ||--o{ RIDER_BELONGING : "记录归属"
+    STATION ||--o{ RESTAURANT_AGREEMENT : "管理"
+    RESTAURANT ||--o{ RESTAURANT_AGREEMENT : "签署"
+    RESTAURANT ||--o{ DISH : "提供"
+    CUSTOMER ||--o{ ORDER : "下单"
+    RIDER ||--o{ ORDER : "配送"
+    ORDER ||--o{ ORDER_DETAIL : "包含"
+    DISH ||--o{ ORDER_DETAIL : "订购"
+
+    STATION {
+        string StationID PK "站点编码"
+        string StationName "站点名称"
+        string City "所在城市"
+        string Address "详细地址"
+        string Leader "负责人"
+    }
+
+    RIDER {
+        string RiderID PK "员工编码"
+        string RiderName "姓名"
+        string IDCard "身份证号"
+        string Phone "手机号码"
+        string LiveAddress "居住地址"
+    }
+
+    RIDER_BELONGING {
+        string RiderID PK, FK "员工编码"
+        string StationID PK, FK "站点编码"
+        date StartDate PK "开始时间"
+        date EndDate "结束时间"
+    }
+
+    RESTAURANT {
+        string RestID PK "餐店编码"
+        string RestName "餐店名称"
+        string Address "详细地址"
+        string Contact "联系人"
+        string Phone "联系电话"
+        string LicenseNum "营业执照编号"
+    }
+
+    RESTAURANT_AGREEMENT {
+        string RestID PK, FK "餐店编码"
+        string StationID FK "站点编码"
+        int Year PK "协议年度"
+    }
+
+    DISH {
+        string DishID PK "菜品编码"
+        string DishName "菜品名称"
+        string MainIngredient "主料"
+        string Taste "口味"
+        decimal Price "报价"
+        string RestID FK "所属餐店编码"
+    }
+
+    CUSTOMER {
+        string CustID PK "顾客账号"
+        string CustName "姓名"
+        string Phone "联系电话"
+        string DefaultAddress "默认送货地址"
+    }
+
+    ORDER {
+        string OrderID PK "订单编号"
+        string CustID FK "顾客账号"
+        string RiderID FK "配送骑手编码"
+        datetime OrderTime "下单时间"
+        string DeliveryTimeRange "选择到货时间区间"
+        string ShippingAddress "本次送货地址"
+        decimal DeliveryFee "配送费用"
+        datetime FinishedTime "配送完成时间"
+        int RiderRating "骑手服务评价"
+        int QualityRating "餐店菜品品质评价"
+    }
+
+    ORDER_DETAIL {
+        string OrderID PK, FK "订单编号"
+        string DishID PK, FK "菜品编码"
+        int Quantity "购买数量"
+        decimal ActualUnitPrice "实际购买单价"
+    }
