@@ -1,7 +1,7 @@
 ---
 title: "数据库原理与应用期末复习"
 published: 2026-07-02 01:23:12
-updated: 2026-07-02 01:44:50
+updated: 2026-07-02 16:22:50
 tags: ["数据库原理与应用", "期末复习"]
 category: "数据库原理与应用"
 ---
@@ -255,7 +255,208 @@ $$\text{Result}_3 = S_{\text{class}} \bowtie S_{\text{eligible}}$$
 
 ## 数据库设计题
 
-> 暂略
+### 已知“美团外卖”网上订餐平台数据库至少包含顾客、骑手、站点、餐店、菜品等实体，部分实体的主要属性及语义如下：
+1. 该网上订餐平台包含多个美团服务站点，每个美团站点包含站点编码、名称、所在城市、地址、负责人等属性；每个站点可以有多个骑手（快递员），每个骑手包含员工编码、姓名、身份证号、手机号码、居住地址等属性。一个骑手在同一时间内只能属于一个美团站点，但在不同时间中可以加入不同美团站点。
+2. 一个美团站点可以有多个加盟餐店，一个餐店同一年度只能与一个美团站点签订加盟协议；餐店包含餐店编码、名称、地址、联系人、联系电话、营业执照编号等属性。
+3. 一个餐店可以提供多个菜品，一个菜品只能由一个餐店提供，不同餐店可以有名称相同的菜名；每个菜品包含菜品编码、名称、主料、口味、报价等属性。
+4. 顾客包含顾客账号、姓名、联系电话等属性，顾客有一个默认的送货地址，但在不同时间下单可以有不同送货地址；顾客下单时，需要记录下单时间和选择到货的时间（一般是一个区间值），系统产生一个独一无二的订单编号，顾客在不同时间订购同一个菜品时，其购买单价可能不同。
+5. 平台按下单的订单编号分配骑手进行配送，每个骑手每天可接单不超过 100 件；每次配送需要记录其配送费用和配送完成时间，并对骑手服务和餐店菜品品质进行评价。
+
+试根据上述语义完成下列各题。
+
+#### (1) 设计满足上述语义要求的 E-R 图，需标明实体的属性、实体之间的联系以及联系产生的新属性。
+
+我们使用 Mermaid 构建全局 E-R 图，清晰展示实体及其属性、联系类型以及联系属性：
+
+```mermaid
+erDiagram
+    %% 实体定义与属性
+    STATION ||--o{ RIDER_BELONGING : "拥有"
+    RIDER ||--o{ RIDER_BELONGING : "记录归属"
+    STATION ||--o{ RESTAURANT_AGREEMENT : "管理"
+    RESTAURANT ||--o{ RESTAURANT_AGREEMENT : "签署"
+    RESTAURANT ||--o{ DISH : "提供"
+    CUSTOMER ||--o{ ORDER : "下单"
+    RIDER ||--o{ ORDER : "配送"
+    ORDER ||--o{ ORDER_DETAIL : "包含"
+    DISH ||--o{ ORDER_DETAIL : "订购"
+
+    STATION {
+        string StationID PK "站点编码"
+        string StationName "站点名称"
+        string City "所在城市"
+        string Address "详细地址"
+        string Leader "负责人"
+    }
+
+    RIDER {
+        string RiderID PK "员工编码"
+        string RiderName "姓名"
+        string IDCard "身份证号"
+        string Phone "手机号码"
+        string LiveAddress "居住地址"
+    }
+
+    RIDER_BELONGING {
+        string RiderID PK, FK "员工编码"
+        string StationID PK, FK "站点编码"
+        date StartDate PK "开始时间"
+        date EndDate "结束时间"
+    }
+
+    RESTAURANT {
+        string RestID PK "餐店编码"
+        string RestName "餐店名称"
+        string Address "详细地址"
+        string Contact "联系人"
+        string Phone "联系电话"
+        string LicenseNum "营业执照编号"
+    }
+
+    RESTAURANT_AGREEMENT {
+        string RestID PK, FK "餐店编码"
+        string StationID FK "站点编码"
+        int Year PK "协议年度"
+    }
+
+    DISH {
+        string DishID PK "菜品编码"
+        string DishName "菜品名称"
+        string MainIngredient "主料"
+        string Taste "口味"
+        decimal Price "报价"
+        string RestID FK "所属餐店编码"
+    }
+
+    CUSTOMER {
+        string CustID PK "顾客账号"
+        string CustName "姓名"
+        string Phone "联系电话"
+        string DefaultAddress "默认送货地址"
+    }
+
+    ORDER {
+        string OrderID PK "订单编号"
+        string CustID FK "顾客账号"
+        string RiderID FK "配送骑手编码"
+        datetime OrderTime "下单时间"
+        string DeliveryTimeRange "选择到货时间区间"
+        string ShippingAddress "本次送货地址"
+        decimal DeliveryFee "配送费用"
+        datetime FinishedTime "配送完成时间"
+        int RiderRating "骑手服务评价"
+        int QualityRating "餐店菜品品质评价"
+    }
+
+    ORDER_DETAIL {
+        string OrderID PK, FK "订单编号"
+        string DishID PK, FK "菜品编码"
+        int Quantity "购买数量"
+        decimal ActualUnitPrice "实际购买单价"
+    }
+```
+
+:::note[设计思路解析]
+1. **骑手与站点（多对多变体历史联系）**：因为“一个骑手在同一时间内只能属于一个美团站点，但在不同时间中可以加入不同美团站点”，所以骑手与站点并不是单纯的 1:N 关系，而是随时间变化的多对多历史记录。因此我们引入了联系实体 `RIDER_BELONGING`（骑手归属历史），其联合主键包含 `(RiderID, StartDate)`，用以记录骑手在不同时段所属的站点。
+2. **餐店与站点（年度约束联系）**：由于“一个餐店同一年度只能与一个美团站点签订加盟协议”，我们在 `RESTAURANT_AGREEMENT`（加盟协议）中引入了年度属性 `Year`。在该联系中，联合主键为 `(RestID, Year)`，从而在模型层面强约束了同一个餐店在同一年只能加盟一个站点。
+3. **订单明细与价格变动**：由于“顾客在不同时间订购同一个菜品时，其购买单价可能不同”，因此在订单和菜品的多对多关联实体 `ORDER_DETAIL` 中，必须包含属性 `ActualUnitPrice`（实际购买单价）和 `Quantity`（数量），用以记录下单时的实时交易快照。
+:::
+
+#### (2) 将该 E-R 图转换成关系模式，并指出每一个关系模式中的主码和外码。
+
+根据以上 E-R 图的设计，将其转换为关系模式（下划线表示**主码**，加粗或注释表示**外码**）：
+
+1. **美团站点模式**：
+   `Station` (<u>StationID</u>, StationName, City, Address, Leader)
+   - **主码**：`StationID`
+   - **外码**：无
+
+2. **骑手模式**：
+   `Rider` (<u>RiderID</u>, RiderName, IDCard, Phone, LiveAddress)
+   - **主码**：`RiderID`
+   - **外码**：无
+
+3. **骑手站点归属历史模式**：
+   `RiderBelonging` (<u>RiderID</u>, <u>StationID</u>, <u>StartDate</u>, EndDate)
+   - **主码**：`(RiderID, StationID, StartDate)`
+   - **外码**：`RiderID` 外键引用 `Rider`；`StationID` 外键引用 `Station`
+
+4. **加盟餐店模式**：
+   `Restaurant` (<u>RestID</u>, RestName, Address, Contact, Phone, LicenseNum)
+   - **主码**：`RestID`
+   - **外码**：无
+
+5. **加盟协议模式**：
+   `RestaurantAgreement` (<u>RestID</u>, <u>Year</u>, StationID)
+   - **主码**：`(RestID, Year)`
+   - **外码**：`RestID` 外键引用 `Restaurant`；`StationID` 外键引用 `Station`
+
+6. **菜品模式**：
+   `Dish` (<u>DishID</u>, DishName, MainIngredient, Taste, Price, RestID)
+   - **主码**：`DishID`
+   - **外码**：`RestID` 外键引用 `Restaurant`
+
+7. **顾客模式**：
+   `Customer` (<u>CustID</u>, CustName, Phone, DefaultAddress)
+   - **主码**：`CustID`
+   - **外码**：无
+
+8. **订单模式**：
+   `Order` (<u>OrderID</u>, CustID, RiderID, OrderTime, DeliveryTimeRange, ShippingAddress, DeliveryFee, FinishedTime, RiderRating, QualityRating)
+   - **主码**：`OrderID`
+   - **外码**：`CustID` 外键引用 `Customer`；`RiderID` 外键引用 `Rider`
+
+9. **订单明细模式**：
+   `OrderDetail` (<u>OrderID</u>, <u>DishID</u>, Quantity, ActualUnitPrice)
+   - **主码**：`(OrderID, DishID)`
+   - **外码**：`OrderID` 外键引用 `Order`；`DishID` 外键引用 `Dish`
+
+---
+
+#### (3) 使用 MySQL 建表语句创建“骑手”这个关系模式的数据表，设置其主键和外键等约束条件；同时添加 2 个计算列，要求根据“骑手”的身份证号，自动计算得到“骑手”的出生日期（date 型，例如 1986-02-10）和 “性别”（采用“男”或“女”两种值）这两个列的值。
+
+:::tip[设计抉择说明]
+根据语义 “一个骑手在同一时间内只能属于一个美团站点，但在不同时间中可以加入不同美团站点”：
+- **方案 A（历史归属解耦设计）**：若采用历史记录表 `RiderBelonging` 单独存储归属关系，则骑手基础表 `Riders` 本身不需要设置外键。
+- **方案 B（当前归属简化设计）**：在实际教学或考试中，常简化为在骑手表上保存其**当前所属站点**的 `StationID` 作为外键。
+
+为了保证答案的严谨与全面，我们下面给出**方案 B（包含所属站点外键）**的建表 DDL。如采用方案 A，只需将建表语句中的外键 `StationID` 字段及约束去掉即可。
+:::
+
+```sql title="create_table_riders.sql"
+CREATE TABLE IF NOT EXISTS `riders` (
+    `RiderID`     VARCHAR(20)  NOT NULL COMMENT '员工编码',
+    `RiderName`   VARCHAR(50)  NOT NULL COMMENT '姓名',
+    `IDCard`      CHAR(18)     NOT NULL COMMENT '身份证号',
+    `Phone`       VARCHAR(20)  NOT NULL COMMENT '手机号码',
+    `LiveAddress` VARCHAR(255) DEFAULT NULL COMMENT '居住地址',
+    `StationID`   VARCHAR(20)  DEFAULT NULL COMMENT '当前所属美团站点编码（简化外键关联）',
+    
+    -- 计算列 1：根据身份证第 7-14 位，转换为出生日期 (date 型)
+    `BirthDate`   DATE GENERATED ALWAYS AS (
+        STR_TO_DATE(SUBSTRING(`IDCard`, 7, 8), '%Y%m%d')
+    ) STORED COMMENT '出生日期（由身份证号自动生成）',
+    
+    -- 计算列 2：根据身份证第 17 位奇偶，转换为性别
+    `Gender`      CHAR(1) GENERATED ALWAYS AS (
+        IF(CAST(SUBSTRING(`IDCard`, 17, 1) AS UNSIGNED) % 2 = 1, '男', '女')
+    ) STORED COMMENT '性别（由身份证号自动生成）',
+
+    -- 约束条件设置
+    PRIMARY KEY (`RiderID`),
+    UNIQUE KEY `uk_idcard` (`IDCard`),
+    CONSTRAINT `fk_rider_station` FOREIGN KEY (`StationID`) REFERENCES `stations` (`StationID`)
+        ON DELETE SET NULL 
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+:::tip[MySQL 计算列语法与实现细节]
+1. **`GENERATED ALWAYS AS ... STORED`**：表示使用存储型计算列（STORED），即每次插入或修改数据时计算并物理写入磁盘，从而可以对其创建索引，提高查询性能。
+2. **`SUBSTRING(IDCard, 7, 8)`**：身份证第 7 位起连续 8 位为出生年月日（格式如 `19860210`），通过 `STR_TO_DATE` 函数转换为 MySQL 标准 `DATE` 类型。
+3. **`SUBSTRING(IDCard, 17, 1)`**：身份证第 17 位为性别标识符，奇数为男，偶数为女。通过对 2 取模 `MOD(..., 2)` 或 `% 2` 结合 `IF` 函数实现性别的自动映射。
+:::
+
 
 ## 程序设计题
 
@@ -967,4 +1168,87 @@ DELIMITER ;
 在原代码中，通过在外部声明一个 `$cur_state` 状态标志与全局 `NOT FOUND` 句柄来区分内外层游标的结束。这种写法在逻辑复杂时容易因变量忘记重置而出现死循环。
 
 **更优雅的替代写法**：可以在外层循环的 `WHILE` 内部定义一个局部嵌套块 (`BEGIN ... END`)，将内层游标及其对应的 `NOT FOUND` 局部句柄独立声明在该块中。利用 MySQL 句柄的块级作用域（Scope），内层句柄在内层块结束时自动失效，从而无需使用 `$cur_state` 进行状态切换。
+:::
+
+### 9. 存储过程与 JSON 数据处理及排名
+
+创建一个存储过程，输入一个以 JSON 对象数组存储的客户编码数据集 `customerset`（参考格式如下），使用 MySQL 相关 JSON 函数，从这个客户编码数据集中提取各个客户信息，从客户表中删除这些客户，并返回客户编码值最小的那个客户在所有客户中的排名序号。
+
+```json
+[
+  {"customerid": "ZJTYMY"},
+  {"customerid": "ZJHDDZ"},
+  {"customerid": "HNCQYL"},
+  {"customerid": "GDZYYL"},
+  ...
+  {"customerid": "TJMLYB"}
+]
+```
+
+#### (1) 准备工作：创建临时客户表
+为了避免直接修改原始客户表，先将数据复制到临时表 `myCustomers` 中进行操作：
+```sql title="create_temporary_table.sql"
+DROP TABLE IF EXISTS myCustomers;
+CREATE TABLE myCustomers LIKE customers;
+INSERT INTO myCustomers SELECT * FROM customers;
+```
+
+#### (2) 存储过程的实现
+我们定义存储过程 `p2`，使用 `JSON_TABLE` 函数将输入的 JSON 数据解析成临时关系表形式进行查询与关联删除，并通过比对计算出最小编码客户在全表中的排名：
+```sql title="sp_delete_and_rank_json.sql"
+DROP PROCEDURE IF EXISTS p2;
+DELIMITER $$
+
+CREATE PROCEDURE p2(
+    IN $customerset JSON
+)
+BEGIN
+    DECLARE $min_cid VARCHAR(20);
+    DECLARE $rank INT DEFAULT NULL;
+
+    -- 使用 JSON_TABLE 从传入的 JSON 数据集中提取最小的客户编码
+    SELECT MIN(t.customerid)
+    INTO $min_cid
+    FROM (
+        SELECT DISTINCT jt.customerid
+        FROM JSON_TABLE(
+            $customerset, 
+            '$[*]' COLUMNS (customerid VARCHAR(20) PATH '$.customerid')
+        ) AS jt
+        WHERE jt.customerid IS NOT NULL
+          AND jt.customerid <> ''
+    ) AS t;
+
+    -- 如果提取到了合法的最小客户编码，则计算其排名并从临时表中执行关联删除
+    IF $min_cid IS NOT NULL THEN
+        -- 计算排名：在原表中 CustomerID 小于该编码的记录数 + 1
+        SELECT 1 + COUNT(*)
+        INTO $rank
+        FROM myCustomers
+        WHERE CustomerID < $min_cid;
+
+        -- 关联 JSON 数据解析结果，从临时表中删除对应客户
+        DELETE c
+        FROM myCustomers AS c
+        JOIN (
+            SELECT DISTINCT jt.customerid
+            FROM JSON_TABLE(
+                $customerset, 
+                '$[*]' COLUMNS (customerid VARCHAR(20) PATH '$.customerid')
+            ) AS jt
+            WHERE jt.customerid IS NOT NULL
+              AND jt.customerid <> ''
+        ) AS s ON s.customerid = c.CustomerID;
+    END IF;
+
+    -- 输出最小客户编码与其排名序号
+    SELECT $min_cid AS MinCustomerID, $rank AS RankNo;
+END $$
+
+DELIMITER ;
+```
+
+:::tip[JSON 数据解析与删除优化提示]
+1. **`JSON_TABLE` 函数的应用**：MySQL 8.0 引入的 `JSON_TABLE` 可以把 JSON 数据当作临时表来处理。在本题中，通过它将传入的 JSON 字符串映射成包含 `customerid` 列的临时表，便于后续求 `MIN` 以及与 `myCustomers` 进行 `JOIN` 删除。
+2. **排名计算**：使用 `1 + COUNT(*)` 过滤 `CustomerID < $min_cid` 的行数，是一种高效计算客户在按编码排序后的排名序号的方法，比对整个结果集进行全排序再定位行号具有更好的执行性能。
 :::
