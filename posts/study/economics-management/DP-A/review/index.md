@@ -622,7 +622,7 @@ DELIMITER ;
 
 ### 4. 触发器与订单编号自动生成
 
-将订单表 `orders` 结构复制到 `myOrders` 新表中，但 `OrderID` 不是数值型数据而是一个字符型数据，长度为 12 位。创建一个触发器，当在订单表中插入一条订单记录时，自动产生订单编号。订单编号的生成规则如下：
+将订单表 `orders` 结构复制到 `myOrders` 新表中，但 `OrderID` 不是数值型数据而是一个字符型数据，长度为 12 位。创建一个触发器，当在 `myOrders` 表中插入一条订单记录时，自动产生订单编号。订单编号的生成规则如下：
 - **规则 1**：订单的前 6 位为年份与月份，例如 `201805`；
 - **规则 2**：订单编号的后 4 位为序号，序号小于 1000 时左边用 0 补充，例如 `0001`、`0010`、`0999` 等；
 - **规则 3**：后四位的序号按月份排序，每个月份从 `0001` 开始计数。例如 `2024040001`、`2024040089`，`2024050001`...
@@ -651,11 +651,11 @@ BEGIN
     -- 提取待插入订单日期的年份与月份，格式化为 YYYYMM
     SET DateNum = DATE_FORMAT(NEW.OrderDate, '%Y%m');
 
-    -- 查询该月份当前已有的最大序号，如果当月没有订单，则从 1 开始
-    SELECT IFNULL(MAX(CAST(RIGHT(OrderID, 4) AS UNSIGNED)), 0) + 1
-    INTO SerialNum
-    FROM myOrders
-    WHERE OrderID LIKE CONCAT(DateNum, '%');
+        -- 查询该月份当前已有的最大序号，如果当月没有订单，则从 1 开始
+        SELECT IFNULL(MAX(CAST(RIGHT(TRIM(OrderID), 4) AS UNSIGNED)), 0) + 1
+        INTO SerialNum
+        FROM myOrders
+        WHERE OrderID LIKE CONCAT(DateNum, '%');
 
     -- 拼接年份月份与前导补零的 4 位序号
     SET OrderNum = CONCAT(DateNum, LPAD(SerialNum, 4, '0'));
@@ -670,10 +670,11 @@ DELIMITER ;
 
 ### 5. 触发器与数据完整性校验
 
-在客户表中创建一个触发器，当该表中插入一个新客户时，触发器自动验证该客户编码是否正确。数据验证规则如下：
-- **规则 1**：客户编码由 8 个大写字母或数字组成；
-- **规则 2**：客户编码的前 2 位为所属省份中文拼音的首字母，后 4 位与客户名称拼音的首字母；
-- **规则 3**：客户编码第 3-4 位为一个随机数，保证客户编码不重复。如发现数据验证错误时，禁止在该表中插入记录。
+在 `Customers` 表中创建一个触发器，当该表中插入一个新客户时，触发器自动验证该客户编码是否正确。数据验证规则如下：
+- **规则 1**：客户编码由 8 个字符组成；
+- **规则 2**：客户编码前 2 位为大写字母，第 3-4 位为数字，后 4 位为大写字母；
+- **规则 3**：客户编码所属省份与名称拼音首字母校验；
+- **规则 4**：发现数据验证错误时，禁止在该表中插入记录。
 
 #### (1) 触发器逻辑实现
 我们使用一个 `BEFORE INSERT` 触发器，在插入数据前校验 `CustomerID`。若校验失败，则使用 `SIGNAL SQLSTATE '45000'` 抛出自定义错误消息，从而回滚当前插入操作：
@@ -682,7 +683,7 @@ DROP TRIGGER IF EXISTS tr3;
 DELIMITER $$
 CREATE TRIGGER tr3
     BEFORE INSERT
-    ON myCustomers
+    ON Customers
     FOR EACH ROW
 BEGIN
     DECLARE RegionCode CHAR(2);
@@ -707,14 +708,14 @@ BEGIN
         SET MESSAGE_TEXT = '数据校验失败：客户编码前 2 位必须为所属省份中文拼音的首字母！';
         
     -- 3. 验证后 4 位名称拼音首字母：与联系人姓名 Contactname 的首拼音字母一致
-    ELSEIF NOT (NameCode = sys_getFirstPyCode(NEW.Contactname)) THEN
+    ELSEIF NOT (NameCode IN (sys_getFirstPyCode(NEW.Contactname))) THEN
         SIGNAL SQLSTATE '45000' 
         SET MESSAGE_TEXT = '数据校验失败：客户编码后 4 位必须与客户名称拼音的首字母一致！';
         
     -- 4. 验证唯一性：确保该 CustomerID 在表中不重复
     ELSEIF EXISTS (
         SELECT 1 
-        FROM myCustomers 
+        FROM Customers 
         WHERE CustomerID = NEW.CustomerID
     ) THEN
         SIGNAL SQLSTATE '45000' 
@@ -736,16 +737,8 @@ DELIMITER ;
 
 数据验证正确后，将这条记录插入到商品表中去，否则予以错误输出提示。由于商品编码是自增列，存储过程在插入记录后输出该商品的全部商品信息（包括商品编码、类别名称和供应商名称）。
 
-#### (1) 准备工作：创建临时商品表 (保留自增列属性)
-为了避免使用 `CREATE TABLE ... SELECT` 导致丢失主键与自增列（`AUTO_INCREMENT`）属性，我们需要先使用 `LIKE` 复制表结构，再导入数据：
-```sql title="create_table_myproducts.sql"
-DROP TABLE IF EXISTS myProducts;
-CREATE TABLE myProducts LIKE products;
-INSERT INTO myProducts SELECT * FROM products;
-```
-
-#### (2) 存储过程的实现
-我们编写存储过程 `p2`，并在其中依次对入参进行合法性校验。若校验通过，则执行 `INSERT` 动作，并使用 `LAST_INSERT_ID()` 结合多表关联查询返回新插入商品的详细信息：
+#### (1) 存储过程的实现
+我们编写存储过程 `p2`，直接在商品表 `products` 上进行操作。并在其中依次对入参进行合法性校验。若校验通过，则执行 `INSERT` 动作，并使用 `LAST_INSERT_ID()` 结合多表关联查询返回新插入商品的详细信息：
 ```sql title="sp_insert_product.sql"
 DROP PROCEDURE IF EXISTS p2;
 DELIMITER $$
@@ -791,8 +784,8 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '数据校验失败：供应商编码不存在！';
     END IF;
 
-    -- 校验全部通过，执行插入
-    INSERT INTO myProducts (ProductName, QuantityPerunit, Unit, Unitprice, SupplierID, CategoryID, SubcategoryID)
+    -- 校验全部通过，在商品表 products 中执行插入
+    INSERT INTO products (ProductName, QuantityPerunit, Unit, Unitprice, SupplierID, CategoryID, SubcategoryID)
     VALUES ($productname, $quantityperunit, $unit, $unitprice, $supplierid, $categoryid, $subcategoryid);
 
     -- 6. 输出新插入的商品详细信息（关联大类表与供应商表，取得类别名称与供应商名称）
@@ -803,7 +796,7 @@ BEGIN
            a.Unitprice, 
            b.CategoryName, 
            c.CompanyName AS SupplierName
-    FROM myProducts AS a
+    FROM products AS a
     LEFT JOIN categories AS b ON a.CategoryID = b.CategoryID
     LEFT JOIN suppliers  AS c ON a.SupplierID = c.SupplierID
     WHERE a.ProductID = LAST_INSERT_ID();
@@ -813,8 +806,7 @@ DELIMITER ;
 ```
 
 :::tip[提示与代码优化建议]
-1. **保留自增列属性**：直接使用 `CREATE TABLE ... SELECT` 会丢失 `AUTO_INCREMENT` 和 `PRIMARY KEY` 约束。为了让新表 `myProducts` 正常进行商品编码的自增，应先通过 `CREATE TABLE myProducts LIKE products` 完整复制表结构，再通过 `INSERT INTO myProducts SELECT * FROM products` 填充数据。
-2. **多表关联输出**：题干中明确要求“输出该商品的全部商品信息（包括商品编码、类别名称和供应商名称）”。我们在输出部分添加了对 `categories`（类别表）和 `suppliers`（供应商表）的 `LEFT JOIN` 连接，从而实现了对中文描述字段（`CategoryName` 与 `CompanyName`）的正确输出，并且使用了 `LAST_INSERT_ID()` 保证输出的一定是本次插入的那条唯一记录。
+**多表关联输出**：题干中明确要求“输出该商品的全部商品信息（包括商品编码、类别名称和供应商名称）”。我们在输出部分直接连接原商品表 `products`、类别表（`categories`）和供应商表（`suppliers`），实现了对中文描述字段（`CategoryName` 与 `CompanyName`）的正确输出，并且使用了 `LAST_INSERT_ID()` 保证输出的一定是本次插入的那条唯一记录。
 :::
 
 
@@ -1080,16 +1072,8 @@ DELIMITER ;
 ]
 ```
 
-#### (1) 准备工作：创建临时客户表
-为了避免直接修改原始客户表，先将数据复制到临时表 `myCustomers` 中进行操作：
-```sql title="create_temporary_table.sql"
-DROP TABLE IF EXISTS myCustomers;
-CREATE TABLE myCustomers LIKE customers;
-INSERT INTO myCustomers SELECT * FROM customers;
-```
-
-#### (2) 存储过程的实现
-我们定义存储过程 `p2`，使用 `JSON_TABLE` 函数将输入的 JSON 数据解析成临时关系表形式进行查询与关联删除，并通过比对计算出最小编码客户在全表中的排名：
+#### (1) 存储过程的实现
+我们定义存储过程 `p2`，使用 `JSON_TABLE` 函数将输入的 JSON 数据解析成关系表形式，直接在原表 `customers` 上进行查询与关联删除，并通过比对计算出最小编码客户在全表中的排名：
 ```sql title="sp_delete_and_rank_json.sql"
 DROP PROCEDURE IF EXISTS p2;
 DELIMITER $$
@@ -1114,17 +1098,17 @@ BEGIN
           AND jt.customerid <> ''
     ) AS t;
 
-    -- 如果提取到了合法的最小客户编码，则计算其排名并从临时表中执行关联删除
+    -- 如果提取到了合法的最小客户编码，则计算其排名并直接在原表中执行关联删除
     IF $min_cid IS NOT NULL THEN
         -- 计算排名：在原表中 CustomerID 小于该编码的记录数 + 1
         SELECT 1 + COUNT(*)
         INTO $rank
-        FROM myCustomers
+        FROM customers
         WHERE CustomerID < $min_cid;
 
-        -- 关联 JSON 数据解析结果，从临时表中删除对应客户
+        -- 关联 JSON 数据解析结果，从原表 customers 中删除对应客户
         DELETE c
-        FROM myCustomers AS c
+        FROM customers AS c
         JOIN (
             SELECT DISTINCT jt.customerid
             FROM JSON_TABLE(
@@ -1144,6 +1128,6 @@ DELIMITER ;
 ```
 
 :::tip[JSON 数据解析与删除优化提示]
-1. **`JSON_TABLE` 函数的应用**：MySQL 8.0 引入的 `JSON_TABLE` 可以把 JSON 数据当作临时表来处理。在本题中，通过它将传入的 JSON 字符串映射成包含 `customerid` 列的临时表，便于后续求 `MIN` 以及与 `myCustomers` 进行 `JOIN` 删除。
+1. **`JSON_TABLE` 函数的应用**：MySQL 8.0 引入的 `JSON_TABLE` 可以把 JSON 数据当作临时表来处理。在本题中，通过它将传入的 JSON 字符串映射成包含 `customerid` 列的临时表，便于后续求 `MIN` 以及与原表 `customers` 进行 `JOIN` 删除。
 2. **排名计算**：使用 `1 + COUNT(*)` 过滤 `CustomerID < $min_cid` 的行数，是一种高效计算客户在按编码排序后的排名序号的方法，比对整个结果集进行全排序再定位行号具有更好的执行性能。
 :::
