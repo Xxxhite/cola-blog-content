@@ -789,13 +789,9 @@ BEGIN
     VALUES ($productname, $quantityperunit, $unit, $unitprice, $supplierid, $categoryid, $subcategoryid);
 
     -- 6. 输出新插入的商品详细信息（关联大类表与供应商表，取得类别名称与供应商名称）
-    SELECT a.ProductID, 
-           a.ProductName, 
-           a.QuantityPerunit, 
-           a.Unit, 
-           a.Unitprice, 
+    SELECT a.*
            b.CategoryName, 
-           c.CompanyName AS SupplierName
+           c.CompanyName
     FROM products AS a
     LEFT JOIN categories AS b ON a.CategoryID = b.CategoryID
     LEFT JOIN suppliers  AS c ON a.SupplierID = c.SupplierID
