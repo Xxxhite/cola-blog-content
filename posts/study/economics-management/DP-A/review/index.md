@@ -398,7 +398,7 @@ $$\Pi_{CustomerID, Companyname}(Customers) - \Pi_{CustomerID, Companyname}( R \b
 #### (3) 对应的 SQL 语句实现
 根据标准化的语义，我们可以使用以下几种标准的 SQL 写法来实现：
 
-##### 写法一：使用 EXCEPT 集合差操作 (最贴合关系代数减号)
+##### 写法一：使用 EXCEPT + JOIN (自连接)
 ```sql title="solution_except.sql"
 SELECT CustomerID, Companyname
 FROM customers
@@ -406,69 +406,47 @@ EXCEPT
 SELECT c.CustomerID, c.Companyname
 FROM customers c
 JOIN orders o ON c.CustomerID = o.CustomerID
-WHERE o.OrderID IN (
-    -- 购买了“青岛啤酒”的订单 ID 集
-    SELECT o1.OrderID
-    FROM orders o1
-    JOIN orderitems oi1 ON o1.OrderID = oi1.OrderID
-    JOIN products p1 ON oi1.ProductID = p1.ProductID
-    WHERE o1.OrderDate BETWEEN '2018-01-01' AND '2018-06-30'
-      AND p1.Productname = '青岛啤酒'
-    INTERSECT
-    -- 购买了“百威啤酒”的订单 ID 集
-    SELECT o2.OrderID
-    FROM orders o2
-    JOIN orderitems oi2 ON o2.OrderID = oi2.OrderID
-    JOIN products p2 ON oi2.ProductID = p2.ProductID
-    WHERE o2.OrderDate BETWEEN '2018-01-01' AND '2018-06-30'
-      AND p2.Productname = '百威啤酒'
-);
+JOIN orderitems oi1 ON o.OrderID = oi1.OrderID
+JOIN products p1 ON oi1.ProductID = p1.ProductID
+JOIN orderitems oi2 ON o.OrderID = oi2.OrderID
+JOIN products p2 ON oi2.ProductID = p2.ProductID
+WHERE o.OrderDate BETWEEN '2018-01-01' AND '2018-06-30'
+  AND p1.Productname = '青岛啤酒'
+  AND p2.Productname = '百威啤酒';
 ```
 
-##### 写法二：使用 NOT IN 子查询
+##### 写法二：使用 NOT IN + JOIN (自连接)
 ```sql title="solution_not_in.sql"
 SELECT CustomerID, Companyname
 FROM customers
 WHERE CustomerID NOT IN (
     SELECT o.CustomerID
     FROM orders o
-    WHERE o.OrderID IN (
-        SELECT o1.OrderID
-        FROM orders o1
-        JOIN orderitems oi1 ON o1.OrderID = oi1.OrderID
-        JOIN products p1 ON oi1.ProductID = p1.ProductID
-        WHERE o1.OrderDate BETWEEN '2018-01-01' AND '2018-06-30'
-          AND p1.Productname = '青岛啤酒'
-        INTERSECT
-        SELECT o2.OrderID
-        FROM orders o2
-        JOIN orderitems oi2 ON o2.OrderID = oi2.OrderID
-        JOIN products p2 ON oi2.ProductID = p2.ProductID
-        WHERE o2.OrderDate BETWEEN '2018-01-01' AND '2018-06-30'
-          AND p2.Productname = '百威啤酒'
-    )
+    JOIN orderitems oi1 ON o.OrderID = oi1.OrderID
+    JOIN products p1 ON oi1.ProductID = p1.ProductID
+    JOIN orderitems oi2 ON o.OrderID = oi2.OrderID
+    JOIN products p2 ON oi2.ProductID = p2.ProductID
+    WHERE o.OrderDate BETWEEN '2018-01-01' AND '2018-06-30'
+      AND p1.Productname = '青岛啤酒'
+      AND p2.Productname = '百威啤酒'
 );
 ```
 
-##### 写法三：使用 NOT EXISTS 子查询 (执行效率高)
+##### 写法三：使用 NOT EXISTS + JOIN (自连接)
 ```sql title="solution_not_exists.sql"
 SELECT CustomerID, Companyname
 FROM customers c
 WHERE NOT EXISTS (
     SELECT 1
-    FROM orders o1
-    JOIN orderitems oi1 ON o1.OrderID = oi1.OrderID
+    FROM orders o
+    JOIN orderitems oi1 ON o.OrderID = oi1.OrderID
     JOIN products p1 ON oi1.ProductID = p1.ProductID
-    WHERE o1.CustomerID = c.CustomerID
-      AND o1.OrderDate BETWEEN '2018-01-01' AND '2018-06-30'
+    JOIN orderitems oi2 ON o.OrderID = oi2.OrderID
+    JOIN products p2 ON oi2.ProductID = p2.ProductID
+    WHERE o.CustomerID = c.CustomerID
+      AND o.OrderDate BETWEEN '2018-01-01' AND '2018-06-30'
       AND p1.Productname = '青岛啤酒'
-      AND EXISTS (
-          SELECT 1
-          FROM orderitems oi2
-          JOIN products p2 ON oi2.ProductID = p2.ProductID
-          WHERE oi2.OrderID = o1.OrderID
-            AND p2.Productname = '百威啤酒'
-      )
+      AND p2.Productname = '百威啤酒'
 );
 ```
 
