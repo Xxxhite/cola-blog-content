@@ -34,7 +34,7 @@ const diaryData: DiaryItem[] = [
         content:
             "bw票抢到了有感觉吗",
         date: "2026-06-27 12:15:00",
-        images: ["/images/diary/3.jpg"],
+        images: ["/images/diary/3.webp"],
         mood: "🥰",
         tags: ["呟き"]
     },
@@ -51,8 +51,17 @@ const diaryData: DiaryItem[] = [
         content:
             "期末考试你在无差别的攻击所有人！",
         date: "2026-06-30 00:10:44",
-        images: ["/images/diary/5.png"],
+        images: ["/images/diary/5.webp"],
         mood: "😡",
+        tags: ["呟き"]
+    },
+    {
+        id: 6,
+        content:
+            "无题",
+        date: "2026-07-08 17:39:51",
+        images: ["/images/diary/6.webp"],
+        mood: "🐵",
         tags: ["呟き"]
     }
 ];
