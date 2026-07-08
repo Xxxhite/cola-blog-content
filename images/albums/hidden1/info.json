@@ -1,0 +1,10 @@
+{
+  "title": "250523",
+  "description": "一些照片",
+  "date": "2025-05-23",
+  "location": "上海",
+  "tags": ["旅行", "亲人"],
+  "layout": "grid",
+  "columns": 3,
+  "hidden": true
+}
