@@ -63,7 +63,16 @@ const diaryData: DiaryItem[] = [
         images: ["/images/diary/6.webp"],
         mood: "🐵",
         tags: ["呟き"]
-    }
+    },
+    {
+        id: 7,
+        content:
+            "原来bw是这种感觉。。",
+        date: "2026-07-12 17:39:00",
+        images: ["/images/diary/7.webp"],
+        mood: "😢",
+        tags: ["呟き"]
+    },
 ];
 
 // 获取日记列表（按时间倒序）
