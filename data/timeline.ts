@@ -56,6 +56,6 @@ export const timelineData: TimelineItem[] = [
             type: "website"
         }],
         icon: "icon-park-outline:cola",
-        color: "#F5222D"
+        color: "#F5222D",
     }
 ];
