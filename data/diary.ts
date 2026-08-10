@@ -107,6 +107,15 @@ const diaryData: DiaryItem[] = [
         mood: "😭",
         tags: ["呟き"]
     },
+    {
+        id: 11,
+        content:
+            "😚😚😚",
+        date: "2026-08-11 03:22:00",
+        images: ["/images/diary/11.webp"],
+        mood: "😚",
+        tags: ["呟き"]
+    }
 ];
 
 // 获取日记列表（按时间倒序）
