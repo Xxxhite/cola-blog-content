@@ -41,5 +41,5 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Details:**" >> $GITHUB_STEP_SUMMARY
           echo "- Commit: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- Message: ${{ github.event.head_commit.message || 'N/A' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Author: ${{ github.event.head_commit.author.name || 'N/A' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Message: ${{ github.event.head_commit.message }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Author: ${{ github.event.head_commit.author.name }}" >> $GITHUB_STEP_SUMMARY
