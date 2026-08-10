@@ -93,6 +93,15 @@ const diaryData: DiaryItem[] = [
     {
         id: 9,
         content:
+            "我叫你出来是解决问题的，不是让你跟着一起卡的好吗",
+        date: "2026-08-04 01:50:00",
+        images: ["/images/diary/9.webp"],
+        mood: "😅",
+        tags: ["呟き"]
+    },
+    {
+        id: 10,
+        content:
             "我的相机永远的离开了我...",
         date: "2026-08-08 18:16:00",
         mood: "😭",
