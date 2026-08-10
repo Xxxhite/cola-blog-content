@@ -90,6 +90,14 @@ const diaryData: DiaryItem[] = [
         mood: "🤔",
         tags: ["呟き"]
     },
+    {
+        id: 9,
+        content:
+            "我的相机永远的离开了我...",
+        date: "2026-08-08 18:16:00",
+        mood: "😭",
+        tags: ["呟き"]
+    },
 ];
 
 // 获取日记列表（按时间倒序）
