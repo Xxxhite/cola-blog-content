@@ -111,7 +111,7 @@ const diaryData: DiaryItem[] = [
         id: 11,
         content:
             "😚😚😚",
-        date: "2026-08-11 03:22:00",
+        date: "2026-08-10 03:22:00",
         images: ["/images/diary/11.webp"],
         mood: "😚",
         tags: ["呟き"]
