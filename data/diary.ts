@@ -41,7 +41,7 @@ const diaryData: DiaryItem[] = [
     {
         id: 3,
         content:
-            "bw票抢到了有感觉吗",
+            "bw票抢到了有感觉吗。",
         date: "2026-06-27 12:15:00",
         images: ["/images/diary/3.webp"],
         mood: "🥰",
@@ -67,7 +67,7 @@ const diaryData: DiaryItem[] = [
     {
         id: 6,
         content:
-            "无题",
+            "无题。",
         date: "2026-07-08 17:39:51",
         images: ["/images/diary/6.webp"],
         mood: "🐵",
@@ -93,7 +93,7 @@ const diaryData: DiaryItem[] = [
     {
         id: 9,
         content:
-            "我叫你出来是解决问题的，不是让你跟着一起卡的好吗",
+            "我叫你出来是解决问题的，不是让你跟着一起卡的好吗？？",
         date: "2026-08-04 01:50:00",
         images: ["/images/diary/9.webp"],
         mood: "😅",
@@ -115,7 +115,16 @@ const diaryData: DiaryItem[] = [
         images: ["/images/diary/11.webp"],
         mood: "😚",
         tags: ["呟き"]
-    }
+    },
+    {
+        id: 12,
+        content:
+            "全都对上了。",
+        date: "2026-08-16 19:39:00",
+        images: ["/images/diary/12.webp"],
+        mood: "😋",
+        tags: ["呟き"]
+    },
 ];
 
 // 获取日记列表（按时间倒序）
