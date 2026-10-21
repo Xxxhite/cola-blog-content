@@ -57,5 +57,14 @@ export const timelineData: TimelineItem[] = [
         }],
         icon: "icon-park-outline:cola",
         color: "#F5222D",
+    },
+    {
+        id: "graduation-design-project",
+        title: "毕业设计项目",
+        description: "毕设项目正在进行中",
+        type: "project",
+        startDate: "2026-10-08",
+        icon: "material-symbols:engineering",
+        color: "#52c41a",
     }
 ];

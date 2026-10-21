@@ -125,6 +125,15 @@ const diaryData: DiaryItem[] = [
         mood: "😋",
         tags: ["呟き"]
     },
+    {
+        id: 13,
+        content:
+            "这ai练到位了。",
+        date: "2026-10-20 09:42:00",
+        images: ["/images/diary/13.webp"],
+        mood: "🥬",
+        tags: ["呟き"]
+    }
 ];
 
 // 获取日记列表（按时间倒序）
