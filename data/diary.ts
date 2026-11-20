@@ -133,6 +133,14 @@ const diaryData: DiaryItem[] = [
         images: ["/images/diary/13.webp"],
         mood: "🥬",
         tags: ["呟き"]
+    },
+    {
+        id: 14,
+        content:
+            "测试一下。",
+        date: "2026-11-21 02:32:00",
+        mood: "🤔",
+        tags: ["呟き"]
     }
 ];
 
