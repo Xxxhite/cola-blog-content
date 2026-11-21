@@ -2,7 +2,7 @@
 title: 第 1 章 Java 入门
 published: 2026-11-21 15:10:00
 tags: [Java 程序入口, 类与对象, 方法调用]
-category: Java 学习笔记
+category: 面向对象程序设计
 ---
 
 本章介绍 Java 的运行方式、JDK 工具、程序入口，以及类与对象的基本用法。

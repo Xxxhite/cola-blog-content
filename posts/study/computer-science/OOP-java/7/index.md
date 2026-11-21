@@ -2,7 +2,7 @@
 title: 第 7 章 内部类与异常类
 published: 2026-11-21 15:16:00
 tags: [成员内部类, 匿名类, 异常处理, 自定义异常, 断言]
-category: Java 学习笔记
+category: 面向对象程序设计
 ---
 
 本章介绍成员内部类、匿名类与 Lambda，以及异常、断言和 `finally`。
