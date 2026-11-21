@@ -130,7 +130,7 @@ class Pillar {
 
 2. `super(...)`、`super.f()` 和 `super.n` 各用于什么？
 
-   答案：:spoiler[`super(...)` 在子类构造方法中调用父类构造方法；`super.f()` 调用父类方法；`super.n` 访问父类字段。]
+   答案：:spoiler[super(...) 在子类构造方法中调用父类构造方法；super.f() 调用父类方法；super.n 访问父类字段。]
 
 3. 子类能直接访问父类的 `private` 字段吗？
 
@@ -142,8 +142,8 @@ class Pillar {
 
 5. 为什么柱体类可以不关心底面是圆还是矩形？
 
-   答案：:spoiler[柱体持有共同的 `Geometry` 类型，只调用底面的 `getArea()`。圆和矩形分别实现该方法，运行时由实际底面对象提供面积。]
+   答案：:spoiler[柱体持有共同的 Geometry 类型，只调用底面的 getArea()。圆和矩形分别实现该方法，运行时由实际底面对象提供面积。]
 
 6. 用 `instanceof` 检查后再向下转型有什么作用？
 
-   答案：:spoiler[它先判断对象是否属于目标类型，避免对不兼容的对象强制转换而抛出 `ClassCastException`；检查本身不会改变对象。]
+   答案：:spoiler[它先判断对象是否属于目标类型，避免对不兼容的对象强制转换而抛出 ClassCastException；检查本身不会改变对象。]
