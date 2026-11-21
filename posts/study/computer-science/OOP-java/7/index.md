@@ -18,16 +18,19 @@ class Farm {
     private final String name;
     Farm(String name) { this.name = name; }
 
-    class Cow {
+    class Cow { // 非静态成员内部类，关联一个 Farm 实例
         void speak() {
-            System.out.println("我生活在" + name);
+            System.out.println("我生活在" + name); // 访问关联的农场名称
         }
     }
 }
+```
 
-// 以下代码位于方法内
+在方法内：
+
+```java
 Farm farm = new Farm("红牛农场");
-Farm.Cow cow = farm.new Cow();
+Farm.Cow cow = farm.new Cow(); // 通过已有的农场实例创建内部类对象
 cow.speak(); // 我生活在红牛农场
 ```
 
@@ -49,19 +52,22 @@ machine.turnOn(() -> {
 
 ```java title="匿名接口实现与 Lambda"
 interface SpeakHello {
-    void speak();
+    void speak(); // 函数式接口的抽象方法
 }
 class HelloMachine {
     void turnOn(SpeakHello hello) { hello.speak(); }
 }
+```
 
-// 以下代码位于方法内
+在方法内：
+
+```java
 HelloMachine machine = new HelloMachine();
-machine.turnOn(new SpeakHello() {
+machine.turnOn(new SpeakHello() { // 匿名类实现 SpeakHello
     @Override
     public void speak() { System.out.println("你好！"); }
 });
-machine.turnOn(() -> System.out.println("Hello!"));
+machine.turnOn(() -> System.out.println("Hello!")); // Lambda 实现同一个接口方法
 ```
 
 两次调用均通过参数 `hello` 执行 `speak`；第一次创建匿名实现类对象，第二次使用 Lambda 提供函数式接口的实现。匿名类还可以继承抽象类并调用其构造方法，Lambda 则不能用来替代抽象类。
@@ -74,8 +80,8 @@ machine.turnOn(() -> System.out.println("Hello!"));
 int n = 0, m = 0, t = 1000;
 try {
     m = Integer.parseInt("8888");
-    n = Integer.parseInt("ab89");
-    t = 7777;
+    n = Integer.parseInt("ab89"); // 解析失败，n 不会被赋值
+    t = 7777; // 异常抛出后，这一行不会执行
 } catch (NumberFormatException e) {
     System.out.println(e.getMessage());
 }
@@ -93,14 +99,14 @@ try {
 可以定义继承 `Exception` 的 `BankException`，在银行计算发现不符合规则的收支时抛出，再由调用方捕获并提示。异常发生后，当前 `try` 中后续语句不会继续执行，已完成的操作也不会自动回滚。
 
 ```java title="自定义异常"
-class BankException extends Exception {
+class BankException extends Exception { // 自定义受检异常
     BankException(String message) {
         super(message);
     }
 }
 
 class Bank {
-    void income(int value) throws BankException {
+    void income(int value) throws BankException { // 调用方须捕获或继续声明该异常
         if (value < 0) {
             throw new BankException("收入不能为负数");
         }

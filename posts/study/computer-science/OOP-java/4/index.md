@@ -21,18 +21,23 @@ UML 类图通常把一个类分为三栏，依次写类名、属性和操作。�
 
 声明引用变量后，可以用 `new` 创建对象。构造方法在创建时初始化对象，例如 `Point(int a, int b)` 设置坐标。若类没有声明任何构造方法，编译器会提供默认的无参构造方法；自行声明构造方法后，不会再自动补上默认无参构造方法。
 
-```java title="Point.java（构造与创建）"
+```java title="Point.java"
 class Point {
-    int x, y;
-    Point(int a, int b) {
+    int x, y; // 实例字段，每个点各自保存坐标
+    Point(int a, int b) { // 构造方法，初始化坐标
         x = a;
         y = b;
     }
 }
-Point p1 = new Point(10, 10);
 ```
 
-最后一行应写在方法内部。不同对象各自保存实例字段；字段有默认值，而局部变量使用前必须明确赋值。
+在方法内部声明变量并创造对象：
+
+```java
+Point p1 = new Point(10, 10); // 调用构造方法创建对象
+```
+
+不同对象各自保存实例字段；字段有默认值，而局部变量使用前必须明确赋值。
 
 ## 引用与对象协作
 
@@ -54,23 +59,26 @@ class Circle {
     }
 }
 class Cone {
-    Circle bottom;
+    Circle bottom; // 保存底面对象的引用
     double height;
     double getVolume() {
         return bottom.getArea() * height / 3;
     }
 }
+```
 
-// 以下代码位于方法内
+在方法内：
+
+```java
 Circle circle = new Circle();
 circle.radius = 10;
 Cone cone = new Cone();
-cone.bottom = circle;
+cone.bottom = circle; // 两处引用指向同一个圆
 cone.height = 5;
 System.out.println(cone.getVolume());
 circle.radius = 20;
 System.out.println(cone.bottom.radius); // 20
-circle = new Circle();
+circle = new Circle(); // 只改变局部变量的指向
 System.out.println(cone.bottom.radius); // 仍为 20
 ```
 
@@ -90,11 +98,14 @@ Java 方法参数按值传递。引用类型参数传递的是引用的副本：
 
 ```java title="实例字段与静态字段"
 class Ladder {
-    double upper;
-    static double lower;
+    double upper;        // 实例字段，每个梯形各有一份
+    static double lower; // 静态字段，所有梯形共享同一份
 }
+```
 
-// 以下代码位于方法内
+在方法内：
+
+```java
 Ladder.lower = 100;
 Ladder first = new Ladder();
 Ladder second = new Ladder();
@@ -114,10 +125,10 @@ System.out.println(Ladder.lower); // 80
 
 ```java title="方法重载"
 double area(double radius) {
-    return Math.PI * radius * radius;
+    return Math.PI * radius * radius;   // 计算圆面积
 }
 double area(double width, double height) {
-    return width * height;
+    return width * height;              // 计算矩形面积
 }
 ```
 
@@ -147,16 +158,20 @@ JAR 文件可以包含已编译的类及其包目录。编译依赖这些类的�
 
 ### 四种访问权限
 
+:::important[复习重点：访问权限对照表]
+
 类成员的访问范围从大到小依次为 `public`、`protected`、包访问权限、`private`。下表以字段和方法为例，假设声明该成员的类对访问方可见。
 
 | 访问权限 | 声明该成员的类 | 同包的其他类 | 不同包的子类 | 不同包的非子类 |
 | --- | --- | --- | --- | --- |
 | `public` | 可以 | 可以 | 可以 | 可以 |
 | `protected` | 可以 | 可以 | 可以，受访问方式限制 | 不可以 |
-| 包访问权限（省略修饰符） | 可以 | 可以 | 不可以 | 不可以 |
+| `friendly` | 可以 | 可以 | 不可以 | 不可以 |
 | `private` | 可以 | 不可以 | 不可以 | 不可以 |
 
-教材里的 `friendly` 指包访问权限，Java 中直接省略访问修饰符。比如 `int count;` 允许同包的类访问，即使它们没有继承关系。子包是不同的包，例如 `school` 和 `school.student` 不算同包。
+:::
+
+ `friendly` 指包访问权限，Java 中直接省略访问修饰符。比如 `int count;` 允许同包的类访问，即使它们没有继承关系。子包是不同的包，例如 `school` 和 `school.student` 不算同包。
 
 顶层类只能用 `public` 或包访问权限。判断跨包调用能否通过编译时，先检查该类是否可见，再检查构造方法、字段或方法的权限。
 
@@ -170,7 +185,7 @@ JAR 文件可以包含已编译的类及其包目录。编译依赖这些类的�
 private int age;
 public void setAge(int age) {
     if (age >= 7 && age <= 28) {
-        this.age = age;
+        this.age = age; // 左边是对象字段，右边是方法参数
     }
 }
 public int getAge() {
@@ -194,9 +209,9 @@ public int getAge() {
 - 创建 `Student[]` 后，数组元素最初为 `null`，还需逐个创建 `Student` 对象。
 
 ```java title="对象数组"
-Student[] students = new Student[3];
+Student[] students = new Student[3]; // 创建数组，元素初始为 null
 for (int i = 0; i < students.length; i++) {
-    students[i] = new Student();
+    students[i] = new Student(); // 为当前位置创建学生对象
     students[i].number = 101 + i;
 }
 ```
@@ -209,13 +224,59 @@ for (int i = 0; i < students.length; i++) {
 
 `javadoc` 从类和成员声明及 `/** ... */` 文档注释生成 HTML 文档。例如 `javadoc -d docs Point.java` 将结果写到 `docs`。可在方法注释中用 `@param` 描述参数、用 `@return` 描述返回值。
 
-## 综合应用：分数与成绩处理
+## 综合应用：有理数封装与评委打分
 
-设计 `Rational` 类时，可以用分子和非零分母表示分数，并提供加、减、乘、除方法；运算后可用最大公约数约分，除法还需检查除数是否为零。成绩处理也可以拆分为输入、去除最高最低分和计算平均分三个职责。排序后去掉两端元素即可计算剩余成绩的平均值，前提是成绩数量足够。
+### 有理数的类封装
 
-两个分数相加时先通分：`a/b + c/d = (a*d + b*c)/(b*d)`；相减只需把分子中的加号改为减号。相乘为 `(a*c)/(b*d)`；除以 `c/d` 相当于乘以 `d/c`，因此 `c` 不能为零。分子、分母还可能发生整数溢出；结果可用最大公约数约分，并统一分母符号。
+`Rational` 用两个私有字段保存分子和分母。构造方法保证分母非零，运算方法返回新的对象，参与运算的两个分数保持原值。
 
-成绩处理的数据流可以理解为：读取评委人数与成绩 → 排序 → 排除一个最低分与一个最高分 → 累加其余成绩 → 除以剩余人数。使用 `Arrays.sort` 会直接修改传入的数组；如果后续还要保留原始顺序，应先复制数组。
+```java title="Rational.java"
+class Rational {
+    private final int numerator;
+    private final int denominator;
+
+    Rational(int numerator, int denominator) {
+        if (denominator == 0) {
+            throw new IllegalArgumentException("分母不能为 0");
+        }
+        this.numerator = numerator;
+        this.denominator = denominator;
+    }
+
+    Rational add(Rational other) {
+        // 通分：两边的分子分别乘以对方的分母。
+        int sum = numerator * other.denominator + other.numerator * denominator;
+        int commonDenominator = denominator * other.denominator;
+        return new Rational(sum, commonDenominator);
+    }
+}
+```
+
+相减沿用通分方法，将新分子中的加法改为减法。相乘时分子和分母分别相乘，除法则先取除数的倒数，因此要检查除数的分子是否为 0。上面的加法只展示通分，完整实现还可以用最大公约数约分、统一分母符号，并考虑整数溢出。
+
+### 评委打分流水线
+
+分数评定可以分成录入分数、去掉极值、计算平均分三个步骤。每一步接收上一步的结果，分别由负责录入、筛选和计算的对象完成。下面将后两步放在一起，便于看清有效分数的下标范围。
+
+```java title="去掉极值后计算平均分"
+static double finalScore(double[] scores) {
+    if (scores.length < 3) {
+        throw new IllegalArgumentException("至少需要 3 个评委分数");
+    }
+
+    double[] sorted = scores.clone(); // 排序副本，保留分数的录入顺序。
+    java.util.Arrays.sort(sorted);
+
+    double sum = 0;
+    // 跳过首尾各一个分数，重复的最高分或最低分仍可参与计算。
+    for (int i = 1; i < sorted.length - 1; i++) {
+        sum += sorted[i];
+    }
+    return sum / (sorted.length - 2);
+}
+```
+
+例如，评委给出 92、88、95、90、85 分，去掉 85 和 95 后，剩下 88、90、92，平均分为 90。
 
 ## 自测
 

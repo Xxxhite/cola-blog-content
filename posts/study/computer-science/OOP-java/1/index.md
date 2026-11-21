@@ -22,9 +22,9 @@ JDK 提供 `javac`、`java`、`javap` 等工具。Windows 上可让 `JAVA_HOME` 
 将下节完整程序保存为 `Hello.java`，在同一目录里执行：
 
 ```powershell title="编译、运行与查看字节码"
-javac -encoding UTF-8 Hello.java
-java Hello
-javap -c Hello
+javac -encoding UTF-8 Hello.java  # 编译源文件
+java Hello                       # 运行主类
+javap -c Hello                   # 查看字节码指令
 ```
 
 保存为 UTF-8 时使用上面的编译命令。文件如果采用 GBK，则改用 `-encoding GBK`。编译后可得到 `Hello.class` 和 `Student.class`，启动时传类名 `Hello`。课件将 `javap` 归在反编译一节，它可以显示类的成员，带 `-c` 时还会反汇编字节码指令。
@@ -35,11 +35,11 @@ javap -c Hello
 
 ```java title="Hello.java"
 public class Hello {
-    public static void main(String[] args) {
+    public static void main(String[] args) { // 程序入口
         System.out.println("大家好!");
         System.out.println("Nice to meet you");
         Student stu = new Student();
-        stu.speak("We are students");
+        stu.speak("We are students"); // 调用实例方法，传入要输出的内容
     }
 }
 
@@ -57,8 +57,8 @@ class Student {
 `People` 类可以用身高 `height`、耳朵 `ear` 描述数据，用 `speak` 描述行为。类描述对象所具有的成员；`new People()` 创建对象，变量 `zhubajie` 保存指向该对象的引用。
 
 ```java title="People.java（摘录）"
-People zhubajie;
-zhubajie = new People();
+People zhubajie;         // 声明引用变量
+zhubajie = new People(); // 创建对象并保存引用
 zhubajie.height = 170;
 zhubajie.ear = "两只大耳朵";
 zhubajie.speak("师傅,咱们别去西天了,改去月宫吧");

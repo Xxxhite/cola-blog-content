@@ -45,13 +45,11 @@ int newValue = ++i; // newValue 为 4，i 为 4
 `^` 可以对整数或字符按位异或。将字符与密钥异或，再异或同一个密钥即可恢复原值，因为同一位连续异或同一值两次会回到原值。
 
 ```java title="字符异或"
-char a = '十';
-char secret = 'A';
-a = (char) (a ^ secret);
-a = (char) (a ^ secret); // 恢复为 '十'
+char a = '十';           // 码点 U+5341
+char secret = 'A';       // 码点 U+0041
+a = (char) (a ^ secret); // 第一次异或：0x5341 ^ 0x41 = 0x5300，a 变成 '匀'
+a = (char) (a ^ secret); // 再异或同一密钥：0x5300 ^ 0x41 = 0x5341，恢复为 '十'
 ```
-
-这是运算演示，不应将此简单方案当作安全加密。
 
 ## 条件分支
 
@@ -63,7 +61,7 @@ a = (char) (a ^ secret); // 恢复为 '十'
 
 ```java title="奖号分支"
 switch (number) {
-    case 9:
+    case 9: // 与 case 12 共用后面的处理语句
     case 12:
         System.out.println("三等奖");
         break;
@@ -77,33 +75,70 @@ switch (number) {
 
 当 `number` 为 9 或 12 时，两者进入相同的输出语句；其他没有列出的号码进入 `default`。
 
-在课件使用的传统写法中，`switch` 可用 `byte`、`short`、`char`、`int` 或其包装类型，也可用 `String` 和枚举。 `long` 不能用于本章这种写法。每个 `case` 对应唯一的常量值。
+在课件使用的传统写法中，`switch` 可用 `byte`、`short`、`char`、`int` 或其包装类型，也可用 `String` 和枚举。`long` 不能用于本章这种写法。每个 `case` 对应唯一的常量值。
 
-## 循环、break 和 continue
+### Java 14 起：箭头形式的 `switch`
 
-| 循环 | 执行顺序 | 循环体可能一次都不执行吗 |
+值得注意的是，Java 14 起 `case` 支持箭头标签 `->`。
+
+箭头分支不会贯穿：执行完所匹配的分支就结束。因此不再需要 `break`，也就不会因漏写 `break` 而误执行后续分支。
+
+```java title="箭头 switch 语句"
+switch (number) {
+    case 9, 12 -> System.out.println("三等奖"); // 多个标签共用一个分支
+    case 27    -> System.out.println("二等奖");
+    default    -> System.out.println("未中奖");
+}
+```
+
+箭头右侧若写成代码块，用 `yield` 提供该分支的值：
+
+```java title="箭头 switch 表达式"
+String prize = switch (number) {
+    case 9, 12 -> "三等奖";
+    case 27 -> "二等奖";
+    default -> {
+        String text = "未中奖";
+        yield text; // 将代码块的结果交给 switch 表达式
+    }
+};
+```
+
+作为表达式使用时，每个分支都必须覆盖所有可能取值（或提供 `default`），结果类型由各分支共同决定。箭头形式同样适用于本章列出的 `byte`、`short`、`char`、`int`、`String` 和枚举；`long` 仍不能用于 `switch`。
+
+## 循环、`break` 和 `continue`
+
+### 三种循环
+
+| 写法 | 执行顺序 | 常见用途 |
 | --- | --- | --- |
-| `for` | 初始化 → 判断条件 → 执行循环体 → 更新 → 再判断 | 可能 |
-| `while` | 判断条件 → 执行循环体 → 再判断 | 可能 |
-| `do...while` | 执行循环体 → 判断条件 → 按条件重复 | 至少执行一次 |
+| `for` | 初始化一次，每轮先判断条件，执行循环体后更新 | 按次数或下标遍历 |
+| `while` | 每轮先判断条件，成立才执行循环体 | 满足条件时持续处理 |
+| `do...while` | 每轮先执行循环体，再判断是否继续 | 至少执行一次 |
 
-`do...while` 的条件后面需要分号，例如 `do { count++; } while (count < 3);`。当流程要求先做一次操作再决定是否重复时，这种结构较自然。
+`for` 和 `while` 的条件一开始就不成立时，循环体不会执行。`do...while` 的条件后需要分号，例如 `do { count++; } while (count < 3);`。
 
-- 用 `for` 累加 `8 + 88 + 888 + …`，通过 `item = item * 10 + 8` 生成下一项。
-- 用 `while` 逐项计算阶乘倒数之和，`1.0 / i` 使用浮点除法。
-- `continue` 可跳过偶数，只累加奇数；内层循环的 `break` 可在找到因子时停止试除，用于判断素数。
-- 下标循环可以直接使用下标，增强 `for` 则依次读取数组元素。
+### 退出循环和跳过本轮
+
+- `break` 结束当前循环，程序从循环后继续执行。在嵌套循环中，不带标签的 `break` 只退出最内层循环。
+- `continue` 跳过本轮剩余语句。普通 `for` 会先执行更新表达式再检查条件，`while` 和 `do...while` 则直接检查条件。
+
+例如，要累加奇数，可以在遇到偶数时用 `continue` 跳过累加语句。试除判断素数时，找到一个因子就可以用 `break` 停止试除。
+
+### 用增强 `for` 遍历数组
+
+需要元素下标时用普通 `for`，只需逐个读取元素时可以用增强 `for`。
 
 ```java title="数组遍历"
 int[] a = {1, 2, 3, 4};
-for (int i : a) {
+for (int i : a) { // i 依次取得元素值
     System.out.println(i);
 }
 ```
 
 增强 `for` 中的基本类型循环变量是元素值的副本；给 `i` 重新赋值不会修改数组元素。
 
-### 逐项生成与累加
+### 用 `for` 逐项生成并累加
 
 以 `8 + 88 + 888` 为例，下一项可以由上一项乘以 10 后在个位加 8。循环每轮先将当前项加入总和，再准备下一项。
 
@@ -112,14 +147,14 @@ long sum = 0;
 long item = 8;
 for (int i = 1; i <= 3; i++) {
     sum += item;
-    item = item * 10 + 8;
+    item = item * 10 + 8; // 在末尾拼上一个 8，得到下一项
 }
 System.out.println(sum); // 984
 ```
 
 这种写法也要考虑整数溢出：项数增加时，`item` 和 `sum` 都可能超出 `long` 的表示范围。
 
-### 递推计算阶乘倒数
+### 用 `while` 递推计算阶乘倒数
 
 计算 `1 + 1/2! + 1/3! + …` 时，相邻两项可以复用：如果当前项为 `1/n!`，下一项就是当前项除以 `n + 1`。
 
@@ -130,14 +165,14 @@ int i = 1;
 while (i <= 20) {
     sum += item;
     i++;
-    item *= 1.0 / i;
+    item *= 1.0 / i; // i 已加 1，此处递推到下一项
 }
 System.out.println(sum);
 ```
 
 第一轮加上 `1/1!`，更新后 `item` 为 `1/2!`。`1.0 / i` 使用浮点除法；若写成 `1 / i`，当 `i` 大于 1 时会发生整数除法，结果为 0。
 
-### 利用循环判断素数
+### 用 `break` 提前结束试除
 
 素数是大于 1 且正因子只有 1 和本身的整数。判断一个数时，可从 2 开始尝试除数；一旦发现余数为 0，就不必再检查后续除数。
 
@@ -146,17 +181,32 @@ boolean prime = number >= 2;
 for (int divisor = 2; divisor <= number / 2; divisor++) {
     if (number % divisor == 0) {
         prime = false;
-        break;
+        break; // 找到因子后结束试除
     }
 }
 System.out.println(prime);
 ```
 
-这里 `number` 是待判断的整数。`break` 只退出它所在的最内层循环；如果把该逻辑放在遍历多个数字的外层循环里，外层仍会继续。
+这里 `number` 是待判断的整数。找到任意一个因子后，`prime` 变为 `false`，剩余的除数无需再检查。
 
 ## 根据输入计算平均值
 
-`hasNextDouble()` 判断下一个输入是否可解析为 `double`，再用 `nextDouble()` 读取并累计数量和总和。遇到不能解析的输入或输入结束时循环停止。若没有读取到任何数字，`sum / m` 不代表有效平均值，需要先检查 `m` 是否为 0。
+`hasNextDouble()` 判断下一项能否解析为数字，`nextDouble()` 读取该项。每读到一个数字就累加并计数，遇到非数字或输入结束时停止。
+
+```java title="读取数字并计算平均值"
+Scanner input = new Scanner(System.in);
+double sum = 0;
+int count = 0;
+
+while (input.hasNextDouble()) {
+    sum += input.nextDouble();
+    count++;
+}
+
+Double average = count > 0 ? sum / count : null; // 没有读到数字时跳过除法
+```
+
+平均值等于总和除以数字个数。计数为 0 时跳过除法，用 `null` 表示没有平均值。
 
 ## 自测
 

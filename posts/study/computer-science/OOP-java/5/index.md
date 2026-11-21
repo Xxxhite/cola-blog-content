@@ -21,16 +21,19 @@ category: Java 学习笔记
 
 ```java title="同名字段"
 class Goods {
-    double weight;
+    double weight; // 父类字段
     void setWeight(double value) { weight = value; }
     double getWeight() { return weight; }
 }
 class CheapGoods extends Goods {
-    int weight;
+    int weight; // 隐藏父类同名字段，两者各自保存值
     void setIntegerWeight(int value) { weight = value; }
 }
+```
 
-// 以下代码位于方法内
+在方法内：
+
+```java
 CheapGoods goods = new CheapGoods();
 goods.setWeight(12.5);
 goods.setIntegerWeight(8);
@@ -49,12 +52,15 @@ class Animal {
     void cry() { System.out.println("动物叫声"); }
 }
 class Dog extends Animal {
-    @Override
+    @Override // 让编译器检查是否正确重写父类方法
     void cry() { System.out.println("汪汪"); }
 }
+```
 
-// 以下代码位于方法内部
-Animal animal = new Dog();
+在方法内：
+
+```java
+Animal animal = new Dog(); // 向上转型，实际对象仍是 Dog
 animal.cry(); // 汪汪
 ```
 
@@ -80,7 +86,7 @@ animal.cry(); // 汪汪
 动物 pet = new 狗();
 pet.cry();
 if (pet instanceof 狗) {
-    狗 dog = (狗) pet;
+    狗 dog = (狗) pet; // 已确认实际类型，可以向下转型
     dog.cry();
 }
 ```
@@ -97,7 +103,7 @@ if (pet instanceof 狗) {
 
 ```java title="面向抽象计算柱体体积"
 abstract class Geometry {
-    abstract double getArea();
+    abstract double getArea(); // 抽象方法，约定底面如何提供面积
 }
 class Circle extends Geometry {
     private final double radius;
@@ -125,7 +131,7 @@ class Pillar {
         if (bottom == null) {
             throw new IllegalStateException("底面不能为空");
         }
-        return bottom.getArea() * height;
+        return bottom.getArea() * height; // 由底面对象的实际类型决定面积算法
     }
 }
 ```

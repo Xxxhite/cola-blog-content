@@ -16,8 +16,8 @@ category: Java 学习笔记
 ```java title="比较字符串"
 String first = "Java";
 String second = new String("Java");
-System.out.println(first == second);      // false
-System.out.println(first.equals(second)); // true
+System.out.println(first == second);      // false：两个引用指向不同对象
+System.out.println(first.equals(second)); // true：字符串内容相同
 ```
 
 两个变量引用不同对象，但文本内容相同。字符串不可变：拼接或截取产生新的结果，不会修改原字符串。
@@ -56,7 +56,7 @@ System.out.println(decimalPart); // 45
 ```java title="复制字符串中的字符"
 String text = "Java语言";
 char[] chars = new char[4];
-text.getChars(0, 4, chars, 0);
+text.getChars(0, 4, chars, 0); // 复制源下标 0 到 3，从目标下标 0 开始写入
 System.out.println(chars); // Java
 char[] all = text.toCharArray();
 ```
@@ -69,7 +69,7 @@ char[] all = text.toCharArray();
 
 ```java title="明确字符编码"
 byte[] bytes = "Java你好".getBytes(java.nio.charset.Charset.forName("GBK"));
-String text = new String(bytes, java.nio.charset.Charset.forName("GBK"));
+String text = new String(bytes, java.nio.charset.Charset.forName("GBK")); // 使用相同字符集解码
 System.out.println(text);
 ```
 
@@ -88,8 +88,8 @@ System.out.println(text);
 ```java title="从文本中查找数字"
 Pattern pattern = Pattern.compile("\\d+(?:\\.\\d+)?");
 Matcher matcher = pattern.matcher("市话 76.8 元，短信 12.68 元");
-while (matcher.find()) {
-    System.out.println(matcher.group());
+while (matcher.find()) { // 查找下一个匹配片段
+    System.out.println(matcher.group()); // 读取本次匹配的完整内容
 }
 ```
 
@@ -124,7 +124,7 @@ try (java.util.Scanner scanner = new java.util.Scanner("12#25#39.87")) {
         if (scanner.hasNextDouble()) {
             total += scanner.nextDouble();
         } else {
-            scanner.next();
+            scanner.next(); // 跳过非数字项，让扫描继续向前
         }
     }
     System.out.printf(java.util.Locale.ROOT, "%.2f%n", total); // 76.87
@@ -141,7 +141,7 @@ try (java.util.Scanner scanner = new java.util.Scanner("12#25#39.87")) {
 StringBuffer text = new StringBuffer("Java");
 text.append(" 语言");
 text.insert(0, "学习 ");
-text.replace(0, 2, "了解");
+text.replace(0, 2, "了解"); // 替换下标 0 和 1 的字符
 System.out.println(text); // 了解 Java 语言
 text.delete(0, text.length());
 ```
@@ -167,7 +167,7 @@ System.out.println(days); // 63
 ```java title="当月日历所需的信息"
 LocalDate date = LocalDate.of(2024, 2, 15);
 LocalDate first = date.withDayOfMonth(1);
-int daysInMonth = date.lengthOfMonth();
+int daysInMonth = date.lengthOfMonth(); // 2024 年是闰年，2 月有 29 天
 for (int i = 0; i < daysInMonth; i++) {
     LocalDate current = first.plusDays(i);
     System.out.println(current + " " + current.getDayOfWeek());
@@ -205,7 +205,7 @@ Random random = new Random(2022);
 int[] frequency = new int[7];
 for (int i = 0; i < 10000; i++) {
     int number = random.nextInt(7) + 1; // 1 到 7
-    frequency[number - 1]++;
+    frequency[number - 1]++; // 编号从 1 开始，数组下标从 0 开始
 }
 System.out.println(Arrays.toString(frequency));
 ```
@@ -227,7 +227,7 @@ Class<?> type = String.class;
 System.out.println(type.getName());
 System.out.println(Arrays.toString(type.getDeclaredConstructors()));
 System.out.println(Arrays.toString(type.getDeclaredFields()));
-System.out.println(Arrays.toString(type.getDeclaredMethods()));
+System.out.println(Arrays.toString(type.getDeclaredMethods())); // 此类声明的方法，不含仅从父类继承的方法
 ```
 
 `getDeclared...` 返回该类声明的对应成员，不等同于只查询公开成员；查看成员信息也不意味着可以绕过访问控制。
@@ -235,7 +235,7 @@ System.out.println(Arrays.toString(type.getDeclaredMethods()));
 ```java title="通过类名调用无参构造方法"
 try {
     Class<?> type = Class.forName("tom.data.Circle");
-    Object object = type.getDeclaredConstructor().newInstance();
+    Object object = type.getDeclaredConstructor().newInstance(); // 查找并调用无参构造方法
     System.out.println(object.getClass().getName());
 } catch (ReflectiveOperationException e) {
     System.out.println("创建对象失败：" + e.getMessage());

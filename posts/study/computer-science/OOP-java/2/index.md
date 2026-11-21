@@ -51,7 +51,7 @@ float f = (float) d;     // 精度可能降低
 Scanner reader = new Scanner(System.in);
 double sum = 0;
 double x = reader.nextDouble();
-while (x != 0) {
+while (x != 0) { // 0 是结束标记，不计入总和
     sum = sum + x;
     x = reader.nextDouble();
 }
@@ -74,9 +74,9 @@ System.out.printf("sum=%10.5f\n", sum);
 
 ```java title="二维数组的行数和列数"
 int[][] table = {{1, 2}, {3, 4, 5}};
-System.out.println(table.length);    // 2
-System.out.println(table[0].length); // 2
-System.out.println(table[1].length); // 3
+System.out.println(table.length);    // 行数：2
+System.out.println(table[0].length); // 第一行的元素数：2
+System.out.println(table[1].length); // 第二行的元素数：3
 ```
 
 `length` 返回数组长度。`a = b` 之后，两个变量引用同一个数组；此时通过任一变量修改元素，另一个变量访问到的也是修改后的元素。赋值没有复制元素。
@@ -84,12 +84,11 @@ System.out.println(table[1].length); // 3
 ```java title="数组引用"
 int[] a = {1, 2, 3, 4};
 int[] b = {100, 200, 300};
-a = b;
+a = b; // 此时 a 指向 b 所指向的数组
 System.out.println(a == b); // true
 System.out.println(a.length); // 3
+System.out.println(a[0]); // 100
 ```
-
-示例打印的 `System.identityHashCode` 是身份哈希值，不能当作对象的内存地址，也不能单凭哈希相同断定是同一对象。
 
 ## 排序与查找
 
@@ -98,12 +97,13 @@ System.out.println(a.length); // 3
 ```java title="选择排序"
 int[] values = {12, 45, 67, 89, 123, -45, 67};
 for (int i = 0; i < values.length - 1; i++) {
-    int minIndex = i;
+    int minIndex = i; // 从未排序区间的起点开始找最小值
     for (int j = i + 1; j < values.length; j++) {
         if (values[j] < values[minIndex]) {
             minIndex = j;
         }
     }
+    // 将最小值交换到未排序区间的起点。
     int temp = values[i];
     values[i] = values[minIndex];
     values[minIndex] = temp;
@@ -114,19 +114,25 @@ System.out.println(java.util.Arrays.toString(values));
 外层循环确定本轮待放置最小值的位置，内层循环寻找剩余部分的最小值。排序结果为 `[-45, 12, 45, 67, 67, 89, 123]`；重复元素也会保留。
 
 ```java title="二分查找"
-int left = 0, right = values.length - 1;
-int index = -1;
+int[] values = {-11, -5, 0, 2, 5, 8, 14, 23}; // 二分查找要求数组有序
+int target = 2; // 目标值
+
+int left = 0, right = values.length - 1; // 搜索范围包含左右端点
+int index = -1; // 未找到时保留 -1
 while (left <= right) {
     int mid = left + (right - left) / 2;
     if (values[mid] == target) {
         index = mid;
         break;
     } else if (values[mid] < target) {
+        // 目标在右侧，下一轮排除中点及其左侧。
         left = mid + 1;
     } else {
         right = mid - 1;
     }
 }
+
+System.out.println(index); // 3
 ```
 
 其中 `values` 是有序整数数组，`target` 是目标值；`index` 为 `-1` 表示未找到。每轮都排除已经比较的中点。也可以使用 `Arrays.sort` 排序后调用 `Arrays.binarySearch`。

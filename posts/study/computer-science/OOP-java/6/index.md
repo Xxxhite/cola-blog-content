@@ -15,15 +15,16 @@ category: Java 学习笔记
 
 ```java title="Com.java"
 public interface Com {
-    int MAX = 100;
-    void on();
-    float sum(float x, float y);
-    default int max(int a, int b) {
+    int MAX = 100;              // 接口常量，隐含 public static final
+    void on();                  // 抽象方法，隐含 public abstract
+    float sum(float x, float y); // 抽象方法，由实现类提供方法体
+
+    default int max(int a, int b) { // 默认方法，为实现类提供默认实现
         outPutJava();
         return a > b ? a : b;
     }
-    static void f() { System.out.println("Java"); }
-    private void outPutJava() { System.out.println("Java"); }
+    static void f() { System.out.println("Java"); } // 静态方法，通过 Com.f() 调用
+    private void outPutJava() { System.out.println("Java"); } // 私有辅助方法，仅接口内部可调用
 }
 ```
 
@@ -45,11 +46,14 @@ public interface Com {
 
 ```java title="接口与 Lambda"
 interface ShowMessage {
-    void 显示商标(String s);
+    void 显示商标(String s); // 唯一抽象方法，决定 Lambda 的参数和返回类型
 }
+```
 
-// 以下代码位于方法内部
-ShowMessage sm = (s) -> {
+在方法内：
+
+```java
+ShowMessage sm = (s) -> { // Lambda 提供显示商标的具体行为
     System.out.println("tvtvtvtv");
     System.out.println(s);
     System.out.println("tvtvtvtv");
@@ -63,7 +67,7 @@ sm.显示商标("长城牌电视机");
 
 ```java title="平均值策略"
 interface ComputeAverage {
-    double average(double a, double b);
+    double average(double a, double b); // 两种平均值算法共用的方法约定
 }
 class ArithmeticAverage implements ComputeAverage {
     public double average(double a, double b) {
@@ -75,11 +79,14 @@ class GeometricAverage implements ComputeAverage {
         return Math.sqrt(a * b);
     }
 }
+```
 
-// 以下代码位于方法内
-ComputeAverage calculator = new ArithmeticAverage();
+在方法内：
+
+```java
+ComputeAverage calculator = new ArithmeticAverage(); // 接口引用先指向算术平均实现
 System.out.println(calculator.average(4, 9)); // 6.5
-calculator = new GeometricAverage();
+calculator = new GeometricAverage(); // 更换实现，调用方式不变
 System.out.println(calculator.average(4, 9)); // 6.0
 ```
 
@@ -89,15 +96,18 @@ System.out.println(calculator.average(4, 9)); // 6.0
 
 ```java title="接口参数与回调"
 interface SpeakHello {
-    void speak();
+    void speak(); // 无参数、无返回值的抽象方法
 }
 class Greeter {
     void greet(SpeakHello hello) {
-        hello.speak();
+        hello.speak(); // 回调由调用方提供的问候行为
     }
 }
+```
 
-// 以下代码位于方法内
+在方法内：
+
+```java
 Greeter greeter = new Greeter();
 greeter.greet(() -> System.out.println("你好！"));
 greeter.greet(() -> System.out.println("Hello!"));
