@@ -1,5 +1,5 @@
 ---
-title: 第 8 章 字符串、日期与常用类
+title: 第 8 章 常用实用类
 published: 2026-11-21 15:17:00
 tags: [String, 正则表达式, 日期时间, 随机数, 反射]
 category: Java 学习笔记
@@ -22,6 +22,18 @@ System.out.println(first.equals(second)); // true
 
 两个变量引用不同对象，但文本内容相同。字符串不可变：拼接或截取产生新的结果，不会修改原字符串。
 
+### String 常用方法
+
+| 目的 | 方法 | 示例或结果 |
+| --- | --- | --- |
+| 获取长度与字符 | `length()`、`charAt(index)` | `"Java".length()` 为 4，`"Java".charAt(0)` 为 `'J'` |
+| 检查前缀、后缀和子串 | `startsWith`、`endsWith`、`contains` | `"notes.md".endsWith(".md")` 为 `true` |
+| 比较字符串 | `equals`、`equalsIgnoreCase`、`compareTo`、`compareToIgnoreCase` | `"JAVA".equalsIgnoreCase("Java")` 为 `true` |
+| 搜索与截取 | `indexOf`、`lastIndexOf`、`substring` | `"a-b-c".lastIndexOf('-')` 为 3 |
+| 去除首尾的空格和低位控制字符 | `trim()` | `"  Java ".trim()` 得到 `"Java"` |
+
+`length()` 和 `charAt()` 按 UTF-16 代码单元工作。数字文本可以用 `Integer.parseInt`、`Long.parseLong` 或 `Double.parseDouble` 转为基本类型，反向转换可用 `String.valueOf`。
+
 `compareTo` 可以比较字符串的字典序，也可以用 `Arrays.sort` 排列字符串数组。`Integer.toBinaryString` 表示整数的二进制，`Double.parseDouble` 解析数字文本；`indexOf` 查找位置，`substring` 截取文本。`substring` 的结束下标不包含在结果内；固定按小数点拆分需要考虑科学计数法等表示形式。
 
 ```java title="字符串查找与截取"
@@ -38,6 +50,8 @@ System.out.println(decimalPart); // 45
 `Integer.toBinaryString(7)` 得到 `111`；对负整数，它显示该 `int` 值的二进制补码表示。解析命令行数字时，可以遍历 `main` 的 `args`，逐项调用 `Double.parseDouble`；如果参数不是合法数字，会抛出 `NumberFormatException`，应决定是跳过、提示还是停止计算。
 
 对象可以重写 `toString`，提供更有意义的文本表示。`String` 的 `getChars` 和 `toCharArray` 能取出字符；其中 `getChars` 的源范围同样是左闭右开。
+
+`Object` 默认的 `toString()` 把类名、`@` 和十六进制的哈希值拼在一起。若希望打印时直接显示价格、面积等有意义的属性，可以重写这个方法。
 
 ```java title="复制字符串中的字符"
 String text = "Java语言";
@@ -95,6 +109,30 @@ System.out.println(Arrays.toString(words)); // [Java, SQL, Web]
 
 `\p{Sc}` 匹配 Unicode 货币符号，而“元”是文字，需要在模式中单独处理。`\s` 表示空白字符，`\p{Punct}` 表示标点字符类；代码中的双反斜杠是 Java 字符串字面量所需的写法。
 
+量词 `+` 表示一次或多次，`?` 表示零次或一次，`{4}` 表示恰好四次。用正则检查日期外形可以筛掉缺少字段的输入，但月份天数和闰年仍应交给日期类型校验。`split` 遇到开头的非零宽度匹配时可能产生空的首元素，例如 `"-a-b".split("-")` 的首元素为空字符串。
+
+### StringTokenizer 和 Scanner
+
+`StringTokenizer` 的分隔参数是一组字符，例如 `",;"` 表示逗号和分号都可以分隔。它的 `hasMoreTokens()` 检查是否还有标记，`countTokens()` 返回当前剩余数量，`nextToken()` 取出下一项。如果需要正则分隔符或直接读取数字，可用 `Scanner`。
+
+```java title="从字符串读取数值"
+try (java.util.Scanner scanner = new java.util.Scanner("12#25#39.87")) {
+    scanner.useLocale(java.util.Locale.ROOT);
+    scanner.useDelimiter("#");
+    double total = 0;
+    while (scanner.hasNext()) {
+        if (scanner.hasNextDouble()) {
+            total += scanner.nextDouble();
+        } else {
+            scanner.next();
+        }
+    }
+    System.out.printf(java.util.Locale.ROOT, "%.2f%n", total); // 76.87
+}
+```
+
+`hasNextDouble()` 只检查下一项。`nextDouble()` 成功读取时才消费该项。如果下一项不是数字且还要继续处理，就必须消费或跳过它，否则循环会一直检查同一项。
+
 ## 可变字符串
 
 `StringBuffer` 可使用 `append`、`setCharAt`、`insert`、`replace` 和 `delete` 修改内容。`length()` 是当前字符数量，`capacity()` 是当前缓冲区容量；清空内容后容量不一定归零。
@@ -109,6 +147,8 @@ text.delete(0, text.length());
 ```
 
 ## 日期与时间
+
+`LocalDate` 表示日期，`LocalTime` 表示一天中的时间，`LocalDateTime` 同时保存日期和时间。这三种类型都不携带时区。可以用 `now()` 获取当前本地值，用 `of(...)` 按字段创建指定值。日期之间可用 `isBefore`、`isAfter` 和 `isEqual` 比较。
 
 `LocalDate`、`LocalTime` 可比较和计算日期时间；日期对象的加减方法返回新对象。`ChronoUnit` 可以分别计算两个日期时间之间的完整年、月、日等；随后逐次加上已计算的年和月，可以得到年、月、日的组合差值。单独按月计算的总月数与组合差值中的剩余月数口径不同。
 
@@ -136,6 +176,8 @@ for (int i = 0; i < daysInMonth; i++) {
 
 `withDayOfMonth(1)` 得到当月第一天；`lengthOfMonth()` 考虑闰年，因此这里的二月有 29 天。输出成表格时还需要根据星期几计算开头的空白，并在一周结束时换行。
 
+如果同一个日期要填到多处格式说明符，可以使用参数索引。例如 `String.format(Locale.US, "%1$tF %1$tA", date)` 将日期写成年月日并附上英文星期。 `%1$` 表示使用第一个格式参数，`tF` 生成日期，`tA` 生成完整星期名称。
+
 ## 数学、随机数与金额
 
 `Math.sqrt`、`ceil`、`floor`、`round` 分别用于平方根、向上取整、向下取整和取最接近整数。`sqrt` 对负实数返回 `NaN`；`BigInteger` 使用 `add`、`multiply` 等方法进行大整数运算，返回新值。
@@ -151,6 +193,10 @@ System.out.println(a.multiply(b)); // 121932631112635269
 ```
 
 需要导入 `java.math.BigInteger`。`ceil` 和 `floor` 的方向是正无穷和负无穷，因此负数的结果容易与“去掉小数部分”混淆；`BigInteger` 不会因执行 `add` 而改变变量 `a` 指向的对象。
+
+`Math.abs`、`Math.max` 和 `Math.min` 分别计算绝对值、最大值和最小值。`Math.random()` 返回大于等于 0 且小于 1 的 `double`。 `Random.nextInt()` 可以返回任意 `int`，而 `nextInt(bound)` 把结果限制在 0 到 `bound - 1`，且上界参数必须为正。
+
+`BigInteger.subtract` 用于减法，`divide` 用于整数除法。例如 7 除以 2 得 3。需要格式化输出时，`String.format("%.2f", amount)` 生成两位小数的文本，原数值保持不变。
 
 生成指定范围内的不重复整数时，要求数量合理且不能超过可选数字数量。重复采样可以统计各数出现的次数。相同种子的两个 `Random` 对象，在调用序列相同时得到相同结果；`System.nanoTime()` 可用于计算操作前后的耗时差值。
 
@@ -198,7 +244,13 @@ try {
 
 这里要求类路径中存在 `tom.data.Circle`，且无参构造方法可访问。`Class.forName` 使用包含包名的完整类名；`newInstance` 在运行时调用构造方法，返回对象的引用。若之后要调用圆的专有方法，还需保证对象类型正确并进行适当转换。
 
-`System.console().readPassword()` 可从控制台读取密码。某些 IDE 环境中 `System.console()` 可能为 `null`，使用前应检查；不应将输入的密码打印出来。
+### Arrays、System 和 Console
+
+`Arrays.equals(a, b)` 比较一维数组的元素内容与顺序。`Arrays.copyOf(a, length)` 可以复制出指定长度的数组，较短时截取，较长时用该元素类型的默认值补齐。 `Arrays.sort(a)` 会修改传入数组，`Arrays.binarySearch(a, key)` 要求数组预先排序。
+
+测量排序耗时时，在排序前记录 `System.nanoTime()`，结束后用新值减去起始值。这个差值用于测量经过的时间，不能拿起始值当作日期或时间戳。
+
+`System.console().readPassword()` 可从控制台读取不回显的输入，结果为 `char[]`。某些 IDE 或重定向环境下，`System.console()` 可能为 `null`，使用前应检查。处理结束后可用 `Arrays.fill` 清空字符数组，输入内容不应写入日志。
 
 ## 自测
 
