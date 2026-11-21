@@ -113,12 +113,12 @@ greeter.greet(() -> System.out.println("Hello!"));
 
 3. 接口的常量和抽象方法默认具有什么访问特性？实现类实现方法时需要注意什么？
 
-   答案：:spoiler[接口字段隐含 public static final，普通抽象方法隐含 public abstract；实现类的方法必须具有 public 访问权限。]
+   答案：:spoiler[接口字段隐含 `public static final`，普通抽象方法隐含 `public abstract`；实现类的方法必须具有 `public` 访问权限。]
 
 4. 一个类能同时继承父类并实现多个接口吗？
 
-   答案：:spoiler[可以。Java 类可以有一个直接父类，同时通过 implements 实现多个接口，并提供它们要求的实现。]
+   答案：:spoiler[可以。Java 类可以有一个直接父类，同时通过 `implements` 实现多个接口，并提供它们要求的实现。]
 
 5. 默认方法和静态方法分别怎样调用？
 
-   答案：:spoiler[默认方法通常通过实现接口的对象调用；接口静态方法通过接口名调用，例如 Com.f()。]
+   答案：:spoiler[默认方法通常通过实现接口的对象调用；接口静态方法通过接口名调用，例如 `Com.f()`。]

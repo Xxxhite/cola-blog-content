@@ -50,8 +50,8 @@ zhubajie.speak("师傅,咱们别去西天了,改去月宫吧");
 
 1. `People` 中哪些成员表示数据，哪个成员表示行为？
 
-   答案：:spoiler[height 和 ear 是保存数据的字段；speak 是描述行为的方法。]
+   答案：:spoiler[`height` 和 `ear` 是保存数据的字段；`speak` 是描述行为的方法。]
 
 2. `new People()`、字段赋值和 `speak` 调用分别做了什么？
 
-   答案：:spoiler[new People() 创建对象；字段赋值设置该对象的数据；调用 speak 将实参传给方法并执行方法体。]
+   答案：:spoiler[`new People()` 创建对象；字段赋值设置该对象的数据；调用 `speak` 将实参传给方法并执行方法体。]
