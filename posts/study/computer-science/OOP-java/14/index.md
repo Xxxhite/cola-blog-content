@@ -95,8 +95,8 @@ boolean written = ImageIO.write(image, "png", new File("drawing.png"));
 
 3. 怎样把绘制结果保存为 PNG？
 
-   答案：:spoiler[在 BufferedImage 上完成绘制，再调用 ImageIO.write 并指定 png 格式。]
+   答案：:spoiler[在 `BufferedImage` 上完成绘制，再调用 `ImageIO.write` 并指定 `"png"` 格式。]
 
 4. 怎样让停止后的短音频从开头播放？
 
-   答案：:spoiler[将 Clip 的帧位置设为 0，再调用 start。]
+   答案：:spoiler[对 `Clip` 调用 `setFramePosition(0)`，再调用 `start()`。]

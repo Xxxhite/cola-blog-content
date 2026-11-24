@@ -139,8 +139,8 @@ button.getActionMap().put("update", new AbstractAction() {
 
 5. 下拉框从 A 切到 B，如何只对 B 执行一次处理？
 
-   答案：:spoiler[在 ItemListener 中检查状态，只处理 SELECTED。]
+   答案：:spoiler[在 `ItemListener` 中调用 `getStateChange()` 检查状态，只处理 `ItemEvent.SELECTED`。]
 
 6. 输入对话框用于接收分数，用户取消时应如何处理？
 
-   答案：:spoiler[先检查返回值是否为 null。取消时结束本次输入处理，避免把空值传给数字解析。]
+   答案：:spoiler[先检查 `showInputDialog` 的返回值是否为 `null`。取消时结束本次输入处理，避免把空值传给数字解析。]

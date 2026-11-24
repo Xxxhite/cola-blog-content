@@ -83,7 +83,7 @@ RMI 的远程接口继承 `Remote`，远程方法需声明 `RemoteException` 或
 
 1. `accept()` 返回的对象和监听端口的对象有什么区别？
 
-   答案：:spoiler[`ServerSocket` 继续监听端口。accept 返回的 Socket 用于和一个已连接客户端交换数据。]
+   答案：:spoiler[`ServerSocket` 继续监听端口。`accept()` 返回的 `Socket` 用于和一个已连接客户端交换数据。]
 
 2. TCP 一次 `read()` 是否一定对应对端一次 `write()`？
 
@@ -91,7 +91,7 @@ RMI 的远程接口继承 `Remote`，远程方法需声明 `RemoteException` 或
 
 3. UDP 接收后为什么要看数据包长度？
 
-   答案：:spoiler[缓冲区容量可能大于实际内容长度，解码时应只读取本次接收的数据。]
+   答案：:spoiler[缓冲区容量可能大于实际内容长度，解码时应按 `DatagramPacket.getLength()` 返回的长度读取本次接收的数据。]
 
 4. RMI 客户端怎样取得远程对象？
 

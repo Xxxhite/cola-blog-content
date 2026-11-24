@@ -268,7 +268,7 @@ try {
 
 4. `substring` 的结束下标包含在结果中吗？`indexOf` 找不到内容时返回什么？
 
-   答案：:spoiler[结束下标不包含在结果中；`indexOf` 找不到时返回 -1，应检查结果后再用于截取。]
+   答案：:spoiler[结束下标不包含在结果中；`indexOf` 找不到时返回 `-1`，应检查结果后再用于截取。]
 
 5. `matches` 与 `Matcher.find()` 有什么区别？
 

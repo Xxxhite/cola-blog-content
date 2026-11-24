@@ -99,7 +99,7 @@ try (DataInputStream in = new DataInputStream(
 
 1. 为什么复制文件时不用 `out.write(buffer)`？
 
-   答案：:spoiler[缓冲区最后可能只读满一部分，写整块会把未读入本次数据的字节也写出去。]
+   答案：:spoiler[最后一次可能只读到部分字节。用 `out.write(buffer, 0, count)`，只写本次实际读到的字节。]
 
 2. 文件按顺序写入一个整数、一个浮点数，读取时能颠倒顺序吗？
 
@@ -115,4 +115,4 @@ try (DataInputStream in = new DataInputStream(
 
 5. `readLine()` 返回空字符串与返回 `null` 分别说明什么？
 
-   答案：:spoiler[空字符串表示读到一行空行。null 表示没有剩余行。]
+   答案：:spoiler[空字符串 `""` 表示读到一行空行。`null` 表示没有剩余行。]
