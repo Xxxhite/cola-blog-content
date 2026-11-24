@@ -31,6 +31,25 @@ class Point {
 }
 ```
 
+:::important[构造方法的声明语法规范]
+注意，构造方法可以省略访问修饰符 `public` ,此时构造方法是包访问权限。
+
+`void`绝对不能写，构造方法没有返回类型。如：
+
+```java title="Person.java"
+class Person {
+    // 合法构造方法：包私有
+    Person() {}
+
+    // 合法构造方法：public
+    public Person(String name) {}
+
+    // 不是构造方法，是普通方法
+    public void Person() {}
+}    
+```
+:::
+
 在方法内部声明变量并创造对象：
 
 ```java
