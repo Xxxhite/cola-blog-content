@@ -40,37 +40,54 @@ cow.speak(); // 我生活在红牛农场
 
 ## 匿名类与 Lambda
 
-匿名类在创建对象时同时定义一个没有名字的子类，例如通过 `new Bank(...) { ... }` 实现抽象的 `output` 方法；括号中的参数传给父类构造方法。匿名类也可以实现接口。对于只有一个抽象方法的函数式接口，还可以用 Lambda 表达行为：
+Java的匿名类是一种没有类名、在创建对象时直接定义类的写法，通常用于临时实现接口或继承其他类。
 
-```java title="问候行为"
-machine.turnOn(() -> {
-    System.out.println("你好，欢迎光临!");
-});
-```
-
-假设 `turnOn` 接收包含 `speak()` 抽象方法的接口参数，上面的 Lambda 就提供该方法的实现。匿名类和 Lambda 都能传入问候行为；Lambda 需要有相应的函数式接口目标类型。
-
-```java title="匿名接口实现与 Lambda"
-interface SpeakHello {
-    void speak(); // 函数式接口的抽象方法
-}
-class HelloMachine {
-    void turnOn(SpeakHello hello) { hello.speak(); }
-}
-```
-
-在方法内：
+假设有一个接口:
 
 ```java
-HelloMachine machine = new HelloMachine();
-machine.turnOn(new SpeakHello() { // 匿名类实现 SpeakHello
-    @Override
-    public void speak() { System.out.println("你好！"); }
-});
-machine.turnOn(() -> System.out.println("Hello!")); // Lambda 实现同一个接口方法
+interface Animal {
+    void speak();
+}
 ```
 
-两次调用均通过参数 `hello` 执行 `speak`；第一次创建匿名实现类对象，第二次使用 Lambda 提供函数式接口的实现。匿名类还可以继承抽象类并调用其构造方法，Lambda 则不能用来替代抽象类。
+普通类的写法：
+
+```java
+class Dog implements Animal {
+    @Override
+    public void speak {
+        System.out.println("汪汪!");
+    }
+}
+
+Animal dog = new Dog();
+dog.speak();
+```
+
+使用匿名类：
+
+```java
+Animal Dog = new Animal() {
+    @Override
+    public void speak {
+        System.out.println("汪汪!");
+    }
+};
+
+dog.speak();
+```
+
+匿名类省去了单独定义 `Dog` 类的过程，在创建对象时直接实现 `Animal` 接口。
+
+如果接口只有一个抽象方法，还可以使用Lambda表达式进一步简化：
+
+```java
+Animal dog = () -> {
+    System.out.println("汪汪!");
+};
+```
+
+此外，匿名类还可以继承抽象类并调用父类的构造方法，而Lambda表达式只能用于实现函数式接口。
 
 ## try、catch 与 throw
 
